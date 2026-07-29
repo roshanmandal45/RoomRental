@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+                                                    Phase 1: Project Foundation (Basic Setup)
+                                                    Plan features and database design
+                                                    Decide user roles
+                                                    Design collections/models
+                                                    Plan app pages
+                                                    Setup project
+                                                    Next.js + React
+                                                    Tailwind CSS
+                                                    MongoDB Atlas
+                                                    Mongoose
+                                                    Create authentication
+                                                    Signup/Login
+                                                    User profile
+                                                    User roles:
+                                                    Tenant
+                                                    Owner
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+                                                    Phase 2: Core Rental System (MVP)
+                                                    Create Room/Flat Listing System
+                                                    Owner can post:
+                                                    Title
+                                                    Description
+                                                    Price
+                                                    Location
+                                                    Room type
+                                                    Facilities
+                                                    Images
+                                                    Display Listings
+                                                    Home page with available rooms
+                                                    Listing cards
+                                                    Listing details page
+                                                    Search and Filtering
+                                                    Search by location
+                                                    Filter by:
+                                                    Price
+                                                    Room type
+                                                    Facilities
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+                                                    Phase 3: User Interaction Features
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+                                                    Profile System
+                                                    User information
+                                                    User's posted listings
+                                                    Edit profile
+                                                    Favorites/Wishlist
+                                                    Save rooms
+                                                    View saved rooms
+                                                    Review and Comment System
+                                                    Ratings
+                                                    Reviews
+                                                    Feedback on rooms/owners
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+                                                    Phase 4: Media and Communication
+                                                    Image Upload System
+                                                    Integrate Cloudinary
+                                                    Store image URLs in MongoDB
+                                                    Chat System
+                                                    Tenant ↔ Owner messaging
+                                                    Real-time chat using Socket.io/Firebase
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+                                                    Phase 5: Management Features
+                                                    Booking/Request System
+                                                    Tenant sends rental request
+                                                    Owner accepts/rejects
+                                                    Availability Management
+                                                    Available
+                                                    Pending
+                                                    Rented
+                                                    Report System
+                                                    Report fake listings
+                                                    Report users
+
+                                                 Phase 6: Admin Panel
+
+                                                Admin Dashboard
+                                                Manage users
+                                                Manage listings
+                                                Remove fake posts
+                                                Handle reports
+                                                Statistics
+                                                Total users
+                                                Total listings
+                                                Rental activity
+
+
+                                                Phase 7: Advanced Features
+
+                                                Map Integration
+                                                Show rooms on map
+                                                Location-based searching
+                                                Verification System
+                                                Verify owners
+                                                Verified badge
+                                                Notifications
+                                                New messages
+                                                New listings
+                                                Request updates
+                                                Recommendation System
+                                                Suggest rooms based on:
+                                                User searches
+                                                Location
+                                                Budget
+                                                Payment Integration
+                                                Booking fees
+                                                Premium listings
+                                                Payment gateway
