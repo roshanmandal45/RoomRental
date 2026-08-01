@@ -2,9 +2,9 @@ import Image from "next/image";
 
 export default function Homepage() {
   return (
-    <section className="w-full bg-gray-100 py-10 lg:py-16">
-      <div className="mx-auto max-w-7xl rounded-3xl bg-white shadow-xl px-6 py-8 lg:px-12 lg:py-12"> {/* This is the right content  */}
-        <div className="flex flex-col-reverse items-center gap-10 lg:flex-row lg:gap-16">  
+    <section className="w-full py-10 lg:py-8">
+       {/* This is the right content  */}
+        <div className="flex flex-col-reverse items-center px-4 lg:px-30 gap-10 lg:flex-row lg:gap-16">  
          
           <div className="w-full lg:w-1/2">
            
@@ -37,7 +37,7 @@ export default function Homepage() {
               </button>
             </div>
 
-            
+{/*             
             <div className="mt-8 flex flex-wrap gap-3">
               {[
                 "Kathmandu",
@@ -53,14 +53,16 @@ export default function Homepage() {
                   {item}
                 </span>
               ))}
-            </div>
+            </div> */}
+
+            
           </div>
 
           {/* This is the left content  */}
           <div className="w-full lg:w-1/2">
-            <div className="relative h-[350px]  overflow-hidden rounded-3xl sm:h-[350px] lg:h-[300px] lg:w-[600px] ">
+            <div className="relative h-[350px]  overflow-hidden rounded-xl sm:h-[350px] lg:h-[450px] lg:w-[600px] ">
               <Image
-                src="/images/heroimage.jpg"
+                src="/images/heroimage.webp"
                 alt="Modern Room"
                 fill
                 priority
@@ -73,24 +75,12 @@ export default function Homepage() {
 
               
               <div className="absolute bottom-8 left-8 right-8 text-white">
-                <h2 className="text-3xl font-bold leading-tight lg:text-5xl">
-                  Discover your
-                  <br />
-                  perfect room
-                  <br />
-                  in Nepal.
-                </h2>
-
-                <p className="mt-5 max-w-md text-base text-gray-200">
-                  Browse thousands of verified rooms, hostels, flats,
-                  apartments, and family homes with an easier and faster
-                  search experience.
-                </p>
+                   
               </div>
             </div>
           </div>
         </div>
-      </div>
+      
     </section>
   );
 }
