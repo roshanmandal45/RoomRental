@@ -80,7 +80,8 @@ export default function Homepage() {
             </div>
           </div>
         </div>
-      
+            <hr className="mt-10 w-[83%] ml-32 border-gray-400 " />
+
     </section>
   );
 }
