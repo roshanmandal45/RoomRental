@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,57834,a=>{"use strict";var t=a.i(43476),e=a.i(51653),l=a.i(53295);a.s(["default",0,({className:a="mx-auto w-full max-w-[728px]",wrapperClassName:s})=>(0,t.jsx)(e.default,{adSlot:l.default.MID_PAGE_SLOT,minHeight:250,className:a,wrapperClassName:s??a})])}]);
