@@ -58,7 +58,7 @@ const FeaturedSec = () => {
                       </span>
                     </div>
                     {/* Arrow Div  */}
-                   <div className='flex absolute top-30 text-white px-5'>
+                   <div className='flex justify-between w-full absolute top-30 text-white px-5'>
                      <span> <IoIosArrowBack /> </span>
                      <span> <IoIosArrowForward /> </span>
                    </div>
