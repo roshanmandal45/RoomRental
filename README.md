@@ -41,3 +41,12 @@
 
 MongoDB password -- MGaDo27QL9J5rOsZ
 Mongo URI -- mongodb+srv://<db_username>:MGaDo27QL9J5rOsZ@cluster0.jubycl0.mongodb.net/?appName=Cluster0
+
+
+
+
+
+                   "Why Room Sewa" Section : Navin
+                   "Earn with Room Sewa": Roshan
+                   "Quick Rental Tips" : Navin
+                   "Footer" : Roshan

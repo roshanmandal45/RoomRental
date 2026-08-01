@@ -2,11 +2,11 @@ import Image from "next/image";
 
 export default function Homepage() {
   return (
-    <section className="w-full py-10 lg:py-8">
+    <section className="max-w-[1380px] mx-auto py-10 lg:py-8 border-b border-black/10">
        {/* This is the right content  */}
-        <div className="flex flex-col-reverse items-center px-4 lg:px-30 gap-10 lg:flex-row lg:gap-16">  
+        <div className="flex flex-col-reverse items-center px-4 sm:px-8 md:px-12 gap-10 lg:flex-row lg:gap-16 ">  
          
-          <div className="w-full lg:w-1/2">
+          <div className="w-full lg:w-1/2 ">
            
             <span className="inline-flex rounded-full border border-gray-200 bg-gray-50 px-5 py-2 text-sm font-medium uppercase tracking-[3px] text-gray-600">
               Across Nepal
@@ -16,7 +16,7 @@ export default function Homepage() {
             <h1 className="mt-6 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
               Better rooms,
               stronger search,
-              easier renting.
+              easier renting. 
             </h1>
 
            
@@ -37,23 +37,6 @@ export default function Homepage() {
               </button>
             </div>
 
-{/*             
-            <div className="mt-8 flex flex-wrap gap-3">
-              {[
-                "Kathmandu",
-                "Pokhara",
-                "Lalitpur",
-                "Bhaktapur",
-                "Student Rentals",
-              ].map((item) => (
-                <span
-                  key={item}
-                  className="rounded-full bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700"
-                >
-                  {item}
-                </span>
-              ))}
-            </div> */}
 
             
           </div>
@@ -80,7 +63,7 @@ export default function Homepage() {
             </div>
           </div>
         </div>
-            <hr className="mt-10 w-[83%] ml-32 border-gray-400 " />
+            {/* <hr className="mt-10 w-[83%] ml-32 border-gray-400 " /> */}
 
     </section>
   );
