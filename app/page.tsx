@@ -4,8 +4,8 @@ import Navbar from './components/Navbar'
 import PopularRooms from './components/PopularRoom'
 import FeaturedSec from './components/FeaturedSec'
 import CheapestRoomSec from './components/CheapestRoomSec'
-import WhyRoomSewa from './components/WhyRoomSewa'
-import QuickRental from './components/QuickRental'
+import EarnwithRent from './components/EarnwithRent'
+import Footer from './components/Footer'
 
 export default function page() {
   return (
@@ -15,8 +15,8 @@ export default function page() {
       <PopularRooms/>
       <CheapestRoomSec/>
       <FeaturedSec/>
-      <WhyRoomSewa/>
-      <QuickRental/>
+      <EarnwithRent/>
+      <Footer/>
     </main>
   )
 }
