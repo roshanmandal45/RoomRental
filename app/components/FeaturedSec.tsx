@@ -23,7 +23,7 @@ const FeaturedSec = () => {
     { src: Img8, amount: 23000, address: "New Road, Madhyapur Thimi, Kathmandu,", room: "2BHK" },
 ]
   return (
-    <div className='max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 py-8 border-b border-black/10'> 
+    <div className='max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 py-8 border-b border-black/10 '> 
        {/* Header Section */}
       <div className='flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-6'>
         <div className='flex flex-col gap-1.5'>

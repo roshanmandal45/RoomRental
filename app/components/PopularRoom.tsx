@@ -35,7 +35,7 @@ const cities = [
 
 export default function PopularRooms() {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-2 py-12 lg:py-4 ">
+    <section className="max-w-[1380px] mx-auto py-10 lg:py-8 border-b border-black/10 px-4 sm:px-8 md:px-12">
       
       <div className="mb-10 text-center md:text-left">
         <h2 className="text-3xl sm:text-4xl lg:text-4xl font-bold text-gray-900">
@@ -105,7 +105,7 @@ export default function PopularRooms() {
               
 
       </div>
-      <hr className="mt-10 w-full border-gray-400 " />
+      {/* <hr className="mt-10 w-full border-gray-400 " /> */}
       
     </section>
   );
