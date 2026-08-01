@@ -5,6 +5,7 @@ import PopularRooms from './components/PopularRoom'
 import FeaturedSec from './components/FeaturedSec'
 import CheapestRoomSec from './components/CheapestRoomSec'
 import EarnwithRent from './components/EarnwithRent'
+import Footer from './components/Footer'
 
 export default function page() {
   return (
@@ -15,6 +16,7 @@ export default function page() {
       <CheapestRoomSec/>
       <FeaturedSec/>
       <EarnwithRent/>
+      <Footer/>
     </main>
   )
 }
