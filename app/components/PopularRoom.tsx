@@ -35,7 +35,7 @@ const cities = [
 
 export default function PopularRooms() {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-2 py-12 lg:py-10 ">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-2 py-12 lg:py-4 ">
       
       <div className="mb-10 text-center md:text-left">
         <h2 className="text-3xl sm:text-4xl lg:text-4xl font-bold text-gray-900">
