@@ -125,6 +125,7 @@ const Navbar = () => {
         />
       )}
 
+      {/* Mobile-Only Drawer Panel */}
       {isOpen && (
         <div className="fixed top-20 left-3 right-3 p-4 flex flex-col z-50 gap-3 border border-black/5 rounded-2xl bg-neutral-50 shadow-xl lg:hidden animate-fadeIn">
           <button className="w-full flex items-center py-2 justify-center bg-black text-white rounded-full border border-black/8 font-medium">
