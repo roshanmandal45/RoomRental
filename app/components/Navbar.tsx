@@ -32,16 +32,15 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    // Main Container
-    <div className='p-3 flex flex-col gap-4 relative w-full bg-white text-black border-b border-black/5'>
+    // Main full-width container wrapper
+    <nav className='w-full bg-white text-black border-b border-black/5'>
       
-      {/* TOP ROW CONTEXT: Mobile Stack vs Desktop Row */}
-      <div className='flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-8'>
+      {/* 1. TOP ROW CONTAINER: Centered with mx-auto and padded on the sides */}
+      <div className='max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 py-3 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-8'>
         
         {/* Logo and Mobile Toggle Header */}
         <div className='flex items-center justify-between lg:shrink-0'>
           <Image src={Logo} alt='logo' width={130} height={35} priority />
-          {/* Hamburger Menu Icon: Hidden on lg screens */}
           <span 
             onClick={() => setIsOpen(prev => !prev)} 
             className='border border-black/10 h-9 w-9 rounded-full flex items-center justify-center lg:hidden cursor-pointer'
@@ -50,9 +49,9 @@ const Navbar = () => {
           </span>
         </div>
 
-        {/* Search Bar: Shifts to middle on desktop using max-width constraints */}
+        {/* Search Bar: Stretches smoothly up to max-w-xl on desktop */}
         <div className='w-full lg:max-w-xl'>
-          <div className='flex items-center justify-between border border-black/8 rounded-full p-2.5 shadow-sm'>
+          <div className='flex items-center justify-between border border-black/8 rounded-full p-2.5 shadow-sm bg-white'>
             <div className='flex items-center gap-2 w-full pl-2'>
               <CiSearch size={20} className='text-neutral-500' />
               <input type="text" placeholder='Search places, rooms, flats...' className='w-full outline-none text-sm' />
@@ -63,7 +62,7 @@ const Navbar = () => {
           </div>
         </div> 
 
-        {/* Desktop Buttons Column: Forced visible on lg screen rows, hidden on mobile default state */}
+        {/* Desktop Buttons Column */}
         <div className='hidden lg:flex items-center gap-4 shrink-0'>
           <button className='px-4 py-2 text-sm bg-black text-white rounded-full border border-black/8 hover:bg-neutral-800 transition-colors cursor-pointer'>
             Add Property +
@@ -75,25 +74,27 @@ const Navbar = () => {
 
       </div>
 
-      {/* Categories Row: Always sits cleanly underneath the top items */}
-      <div className='flex gap-7 text-[7px] items-center overflow-x-auto shrink-0 border-b border-black/4 pb-4 lg:justify-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
-        {categories.map((cat, i) => (
-          <div key={i} className='flex flex-col shrink-0 items-center gap-1 group cursor-pointer'>
-            <Image 
-              src={cat.src} 
-              alt={cat.label} 
-              width={24} 
-              height={24} 
-              className='object-contain opacity-70 group-hover:opacity-100 transition-opacity'
-            />
-            <p className='text-[10px] font-medium tracking-wide text-neutral-500 group-hover:text-black transition-colors'>
-              {cat.label}
-            </p>
-          </div>
-        ))}
+      {/* 2. CATEGORIES ROW CONTAINER: Matches the exact max-width and edge paddings as above */}
+      <div className='max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 pb-4'>
+        <div className='flex gap-7 text-[7px] items-center overflow-x-auto shrink-0 border-b border-black/4 pb-2 lg:justify-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
+          {categories.map((cat, i) => (
+            <div key={i} className='flex flex-col shrink-0 items-center gap-1 group cursor-pointer'>
+              <Image 
+                src={cat.src} 
+                alt={cat.label} 
+                width={24} 
+                height={24} 
+                className='object-contain opacity-70 group-hover:opacity-100 transition-opacity'
+              />
+              <p className='text-[10px] font-medium tracking-wide text-neutral-500 group-hover:text-black transition-colors'>
+                {cat.label}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Mobile-Only Drawers: Backdrops and floating drop menus */}
+      {/* Mobile-Only Drawers remain unaffected */}
       {isOpen && (
         <div 
           onClick={() => setIsOpen(false)} 
@@ -112,7 +113,7 @@ const Navbar = () => {
         </div>
       )}
 
-    </div>
+    </nav>
   )
 }
 
