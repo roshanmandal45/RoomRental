@@ -1,0 +1,58 @@
+[33m3904729[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mNavinBranch[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: pull origin main: Fast-forward
+[33m02ba385[m[33m ([m[1;32mmain[m[33m)[m HEAD@{1}: checkout: moving from main to NavinBranch
+[33m02ba385[m[33m ([m[1;32mmain[m[33m)[m HEAD@{2}: pull origin main: Fast-forward
+[33m10b6f64[m HEAD@{3}: checkout: moving from NavinBranch to main
+[33m02ba385[m[33m ([m[1;32mmain[m[33m)[m HEAD@{4}: pull origin main: Fast-forward
+[33med0a694[m[33m ([m[1;31morigin/NavinBranch[m[33m)[m HEAD@{5}: commit: Navbar Updated
+[33m2ff001d[m HEAD@{6}: checkout: moving from main to NavinBranch
+[33m10b6f64[m HEAD@{7}: pull origin main: Fast-forward
+[33mbc1c307[m HEAD@{8}: checkout: moving from NavinBranch to main
+[33m2ff001d[m HEAD@{9}: pull origin NavinBranch: Fast-forward
+[33m8afc803[m HEAD@{10}: pull --rebase origin NavinBranch (finish): returning to refs/heads/NavinBranch
+[33m8afc803[m HEAD@{11}: pull --rebase origin NavinBranch (pick): Navbar Adjusted And Components Added
+[33m2e9e3b8[m HEAD@{12}: pull --rebase origin NavinBranch (start): checkout 2e9e3b8979b45947f93671b9ace56a52fc242481
+[33mcc05bd6[m HEAD@{13}: commit: Navbar Adjusted And Components Added
+[33m46752c1[m HEAD@{14}: checkout: moving from main to NavinBranch
+[33mbc1c307[m HEAD@{15}: pull origin main: Fast-forward
+[33m64da536[m HEAD@{16}: checkout: moving from NavinBranch to main
+[33m46752c1[m HEAD@{17}: commit: Changes Made in Home Page and Added Tasks in Readme
+[33m64da536[m HEAD@{18}: pull origin main: Fast-forward
+[33m57c02d7[m HEAD@{19}: checkout: moving from main to NavinBranch
+[33m64da536[m HEAD@{20}: pull origin main: Fast-forward
+[33mfd56072[m HEAD@{21}: checkout: moving from NavinBranch to main
+[33m57c02d7[m HEAD@{22}: commit: Two sections added
+[33m8a3d346[m HEAD@{23}: checkout: moving from main to NavinBranch
+[33mfd56072[m HEAD@{24}: checkout: moving from NavinBranch to main
+[33m8a3d346[m HEAD@{25}: pull origin NavinBranch: Fast-forward
+[33m961fa5e[m HEAD@{26}: checkout: moving from main to NavinBranch
+[33mfd56072[m HEAD@{27}: pull origin main: Fast-forward
+[33mcae7caf[m HEAD@{28}: checkout: moving from NavinBranch to main
+[33m961fa5e[m HEAD@{29}: commit: 2 Sections Added
+[33m4054690[m HEAD@{30}: checkout: moving from main to NavinBranch
+[33mcae7caf[m HEAD@{31}: pull origin main: Fast-forward
+[33m8a85ab7[m HEAD@{32}: checkout: moving from NavinBranch to main
+[33m4054690[m HEAD@{33}: pull --rebase origin NavinBranch (finish): returning to refs/heads/NavinBranch
+[33m4054690[m HEAD@{34}: pull --rebase origin NavinBranch (pick): Navbar Adjusted
+[33m452fd44[m HEAD@{35}: pull --rebase origin NavinBranch (start): checkout 452fd44da50e4b2cfce8b539f4d65c046714d542
+[33m09c6dd9[m HEAD@{36}: commit: Navbar Adjusted
+[33m8a85ab7[m HEAD@{37}: reset: moving to origin/main
+[33m452fd44[m HEAD@{38}: checkout: moving from main to NavinBranch
+[33m8a85ab7[m HEAD@{39}: reset: moving to origin/main
+[33m452fd44[m HEAD@{40}: checkout: moving from NavinBranch to main
+[33m452fd44[m HEAD@{41}: checkout: moving from main to NavinBranch
+[33m452fd44[m HEAD@{42}: pull origin NavinBranch: Fast-forward
+[33m7696cd7[m HEAD@{43}: checkout: moving from NavinBranch to main
+[33m452fd44[m HEAD@{44}: checkout: moving from main to NavinBranch
+[33m7696cd7[m HEAD@{45}: checkout: moving from NavinBranch to main
+[33m452fd44[m HEAD@{46}: checkout: moving from main to NavinBranch
+[33m7696cd7[m HEAD@{47}: pull: Fast-forward
+[33m4bf14a0[m HEAD@{48}: checkout: moving from NavinBranch to main
+[33m452fd44[m HEAD@{49}: commit: Page.tsx updated
+[33m7696cd7[m HEAD@{50}: pull origin main: Fast-forward
+[33m3d8e5c3[m HEAD@{51}: commit (merge): Merge conflict solved
+[33m927b251[m HEAD@{52}: commit: Navbar Created
+[33madaee83[m HEAD@{53}: commit: ReadMe File Updated
+[33mfa689cf[m HEAD@{54}: commit: Components folder created with Navbar File
+[33m4bf14a0[m HEAD@{55}: checkout: moving from main to NavinBranch
+[33m4bf14a0[m HEAD@{56}: commit: ReadMe File Updated
+[33mef6d5b6[m HEAD@{57}: clone: from https://github.com/roshanmandal45/RoomRental.git
