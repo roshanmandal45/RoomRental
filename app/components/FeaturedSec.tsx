@@ -1,21 +1,20 @@
 import React from 'react'
 import { CiHeart, CiLocationOn } from 'react-icons/ci'
-import Img1 from "@/public/CheapestSecImges/Img1.avif"
-import Img2 from "@/public/CheapestSecImges/Img2.avif"
-import Img3 from "@/public/CheapestSecImges/Img3.avif"
-import Img4 from "@/public/CheapestSecImges/Img4.avif"
-import Img5 from "@/public/CheapestSecImges/Img5.avif"
-import Img6 from "@/public/CheapestSecImges/Img6.avif"
-import Img7 from "@/public/CheapestSecImges/Img7.avif"
+import Img1 from "@/public/FeaturedImages/Img1.avif"
+import Img2 from "@/public/FeaturedImages/Img2.avif"
+import Img7 from "@/public/FeaturedImages/Img3.avif"
+import Img4 from "@/public/FeaturedImages/Img4.avif"
+import Img5 from "@/public/FeaturedImages/Img5.avif"
+import Img6 from "@/public/FeaturedImages/Img6.avif"
+import Img3 from "@/public/CheapestSecImges/Img8.avif"
 import Img8 from "@/public/CheapestSecImges/Img8.avif"
 import Image from 'next/image'
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 
 const FeaturedSec = () => {
     const categories = [
     { src: Img1, amount: 65000, address: "Balaju Chowk, Ring Road, Kathmandu", room: "1 OFFCIE SPACE" },
     { src: Img2, amount: 25000, address: "Maharajgunj, Kathmandu, Nepal", room: "3 BK" },
-    { src: Img3, amount: 28000, address: "DHangadi Chowk, Nepal", room: "2 BHK" },
+    { src: Img3, amount: 28000, address: "Dhangadi Chowk, Nepal", room: "2 BHK" },
     { src: Img4, amount: 30000, address: "Chattisgarh Ilaka, India", room: "1 ROOM" },
     { src: Img5, amount: 20000, address: "Kashmir Street, Pakistan", room: "1 FLAT" },
     { src: Img6, amount: 15000, address: "Dakshinkali -1, Bosan DKT, Dakshinkal", room: "2 BK" },
@@ -57,11 +56,6 @@ const FeaturedSec = () => {
                         <CiHeart size={20} className='stroke-[0.5]' /> 
                       </span>
                     </div>
-                    {/* Arrow Div  */}
-                   <div className='flex justify-between w-full absolute top-30 text-white px-5'>
-                     <span> <IoIosArrowBack /> </span>
-                     <span> <IoIosArrowForward /> </span>
-                   </div>
                   </div>
       
                   <div className='flex flex-col gap-1 px-1'>
