@@ -1,4 +1,6 @@
-import React from 'react'
+"use-client"
+
+
 import { LuShieldCheck } from 'react-icons/lu'
 
 const QuickRental = () => {

@@ -8,6 +8,7 @@ import Footer from './components/Footer'
 import WhyRoomSewa from './components/WhyRoomSewa'
 import QuickRental from './components/QuickRental'
 import EarnWithRoomSewa from './components/EarnwithRent'
+import QuestionSec from './components/Questions'
 
 export default function page() {
   return (
@@ -16,10 +17,12 @@ export default function page() {
       <Homepage/>
       <PopularRooms/>
       <CheapestRoomSec/>
-      <FeaturedSec/>
       <WhyRoomSewa/>
       <QuickRental/>
       <EarnWithRoomSewa/>
+            <FeaturedSec/>
+
+      <QuestionSec/>
       <Footer/>
     </main>
   )
