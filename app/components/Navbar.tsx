@@ -43,7 +43,6 @@ const Navbar = () => {
     };
 
     window.addEventListener("scroll", handleScroll);
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -58,8 +57,6 @@ const Navbar = () => {
       {/* 1. TOP ROW CONTAINER */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 py-3 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
         
-      {/* 1. TOP ROW CONTAINER: Centered with mx-auto and padded on the sides */}
-      <div className="max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 py-3 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
         {/* Logo and Mobile Toggle Header */}
         <div className="flex items-center justify-between lg:shrink-0">
           <Image src={Logo} alt="logo" width={130} height={35} priority />
@@ -72,7 +69,6 @@ const Navbar = () => {
         </div>
 
         {/* Search Bar */}
-        {/* Search Bar: Stretches smoothly up to max-w-xl on desktop */}
         <div className="w-full lg:max-w-xl">
           <div className="flex items-center justify-between border border-black/8 rounded-full p-2.5 shadow-sm bg-white">
             <div className="flex items-center gap-2 w-full pl-2">
@@ -148,25 +144,23 @@ const Navbar = () => {
             </div>
           )}
 
-
-        {/* Desktop Buttons Column */}
-        <div className="hidden lg:flex items-center gap-4 shrink-0">
           <button className="px-4 py-2 text-sm bg-black text-white rounded-full border border-black/8 hover:bg-neutral-800 transition-colors cursor-pointer">
             Add Property +
           </button>
+          
           <button className="h-9 w-9 rounded-full border border-black/15 flex items-center justify-center bg-white hover:bg-neutral-50 transition-colors cursor-pointer shadow-sm">
             <span className="bg-blue-800 text-white flex items-center justify-center h-7 w-7 rounded-full font-bold text-xs">
               N
             </span>
           </button>
         </div>
+
       </div>
 
       {/* 2. CATEGORIES ROW CONTAINER */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 pb-4">
         <div className="flex gap-7 text-[7px] items-center overflow-x-auto shrink-0 border-b border-black/4 pb-2 lg:justify-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {categories.map((cat, i) => (
-            <div key={i} className="flex flex-col shrink-0 items-center gap-1 group cursor-pointer">
             <div
               key={i}
               className="flex flex-col shrink-0 items-center gap-1 group cursor-pointer"
@@ -186,7 +180,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile-Only Drawers */}
+      {/* Mobile-Only Drawer Overlay */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
