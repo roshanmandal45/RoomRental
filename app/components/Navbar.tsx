@@ -50,7 +50,7 @@ const Navbar = () => {
     <nav
       className={`sticky top-0 z-50 w-full text-black transition-all duration-300 ${
         scrolled
-          ? "bg-white/80 backdrop-blur-md shadow-md border-b border-black/5"
+          ? "bg-white/80 backdrop-blur-md shadow-md"
           : "bg-transparent"
       }`}
     >
