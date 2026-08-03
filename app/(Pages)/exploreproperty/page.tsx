@@ -10,8 +10,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import NavbarForPage from "@/app/components/NavbarForPage";
 
 const propertyTypes = [
   "All",
@@ -81,7 +81,7 @@ const properties = [
 export default function ExploreProperty() {
   return (
     <>
-    <Navbar/>
+    <NavbarForPage/>
     <main className="max-w-7xl mx-auto  px-4 lg:px-0 py-4">
       <div className="bg-white lg:h-28 flex rounded-2xl overflow-hidden shadow-2xl">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
