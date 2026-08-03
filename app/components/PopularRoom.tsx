@@ -5,10 +5,11 @@ import { ArrowRight } from "lucide-react";
 const cities = [
   {
     name: "Kathmandu",
+    link:"/exploreproperty",
     image: "/images/khathmandu.avif",
     description:
       "Rooms, flats, and family apartments close to study hubs, offices, and transport routes in Kathmandu.",
-    link: "/rooms/kathmandu",
+    // link: "/rooms/kathmandu",
   },
   {
     name: "Pokhara",
@@ -48,9 +49,12 @@ export default function PopularRooms() {
       </div>
 
       {/* Cards */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8">
         {cities.map((city) => (
-          <div
+          <Link
+          
+           href={city.link}
             key={city.name}
             className="group overflow-hidden rounded-3xl bg-white shadow-md transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl"
           >
@@ -100,7 +104,8 @@ export default function PopularRooms() {
               </Link>
             </div>
             
-          </div>
+          
+          </Link>
         ))}
               
 
