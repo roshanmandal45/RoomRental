@@ -1,4 +1,7 @@
+"use client"
+
 import Image from 'next/image'
+import { useRouter } from 'next/navigation' 
 import React from 'react'
 import Img1 from "@/public/CheapestSecImges/Img1.avif"
 import Img2 from "@/public/CheapestSecImges/Img2.avif"
@@ -22,6 +25,7 @@ const categories = [
 ]
 
 const CheapestRoomSec = () => {
+  const router = useRouter()
   return (
     <div className='max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 py-8 border-b border-black/10'>
       
@@ -49,7 +53,7 @@ const CheapestRoomSec = () => {
           <div key={index} className='flex flex-col gap-3 group cursor-pointer'>
             
             {/* Image Wrapper */}
-            <div className='relative w-full h-[240px] rounded-2xl overflow-hidden border border-black/5 bg-neutral-100 shadow-sm'>
+            <div onClick={() => router.push('/roomDescription')} className='relative w-full h-[240px] rounded-2xl overflow-hidden border border-black/5 bg-neutral-100 shadow-sm'>
               <Image  src={cat.src}  alt={`Affordable rental option ${index + 1}`}  fill sizes="(max-w-640px) 100vw, (max-w-768px) 50vw, (max-w-1024px) 33vw, 25vw" className='object-cover group-hover:scale-105 transition-transform duration-300' />
               <div className='flex w-full justify-between items-center absolute top-0 p-3 z-10 '>
                 <span className='bg-neutral-900/80 backdrop-blur-xs rounded-full px-2.5 py-1 text-white text-[11px] font-medium tracking-wide'>
