@@ -13,24 +13,27 @@ const cities = [
   },
   {
     name: "Pokhara",
+    link:"/exploreproperty",
     image: "/images/pokhara.avif",
     description:
       "Affordable rentals and flexible rooms in Pokhara for students, workers, and long-stay renters.",
-    link: "/rooms/pokhara",
+    // link: "/rooms/pokhara",
   },
   {
     name: "Lalitpur",
+    link:"/exploreproperty",
     image: "/images/lalitpur.avif",
     description:
       "Popular rentals in Patan, Kupondole, Imadol, and the surrounding neighborhoods.",
-    link: "/rooms/lalitpur",
+    // link: "/rooms/lalitpur",
   },
   {
     name: "Bhaktapur",
+    link:"/exploreproperty",
     image: "/images/bhaktapur.jpg",
     description:
       "Budget-friendly rooms and flats across Bhaktapur for families, students, and first-time renters.",
-    link: "/rooms/bhaktapur",
+    // link: "/rooms/bhaktapur",
   },
 ];
 
