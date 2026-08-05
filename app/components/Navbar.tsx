@@ -19,16 +19,16 @@ import { MdOutlineVerified } from "react-icons/md";
 import React, { useEffect, useState } from "react";
 
 const categories = [
-  { src: room, label: "ROOM" },
-  { src: BK, label: "BK" },
-  { src: BHK, label: "BHK" },
-  { src: Apartment, label: "APARTMENT" },
-  { src: House, label: "HOUSE" },
-  { src: Flat, label: "FLAT" },
-  { src: Hostel, label: "HOSTEL" },
-  { src: Hotel, label: "HOTEL" },
-  { src: Cottage, label: "COTTAGE" },
-  { src: Office, label: "OFFICE SPACE" },
+  { src: room, label: "ROOM", link: "/exploreproperty" },
+  { src: BK, label: "BK", link: "/exploreproperty" },
+  { src: BHK, label: "BHK", link: "/exploreproperty" },
+  { src: Apartment, label: "APARTMENT", link: "/exploreproperty" },
+  { src: House, label: "HOUSE", link: "/exploreproperty" },
+  { src: Flat, label: "FLAT", link: "/exploreproperty" },
+  { src: Hostel, label: "HOSTEL", link: "/exploreproperty" },
+  { src: Hotel, label: "HOTEL", link: "/exploreproperty" },
+  { src: Cottage, label: "COTTAGE", link: "/exploreproperty" },
+  { src: Office, label: "OFFICE SPACE", link: "/exploreproperty" },
 ];
 
 const Navbar = () => {
@@ -49,18 +49,15 @@ const Navbar = () => {
   return (
     <nav
       className={`sticky top-0 z-50 w-full text-black transition-all duration-300 ${
-        scrolled
-          ? "bg-white/80 backdrop-blur-md shadow-md"
-          : "bg-transparent"
+        scrolled ? "bg-white/80 backdrop-blur-md shadow-md" : "bg-transparent"
       }`}
     >
       {/* 1. TOP ROW CONTAINER */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 py-3 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
-        
         {/* Logo and Mobile Toggle Header */}
         <div className="flex items-center justify-between lg:shrink-0">
           <Link href={"/"}>
-          <Image src={Logo} alt="logo" width={130} height={35} priority />
+            <Image src={Logo} alt="logo" width={130} height={35} priority />
           </Link>
           <span
             onClick={() => setIsOpen((prev) => !prev)}
@@ -116,11 +113,19 @@ const Navbar = () => {
               >
                 <div className="flex items-center gap-2 text-sm">
                   <span>🇳🇵</span>
-                  <span className={selectedButton === "Nepal" ? "text-red-500" : "text-neutral-700"}>
+                  <span
+                    className={
+                      selectedButton === "Nepal"
+                        ? "text-red-500"
+                        : "text-neutral-700"
+                    }
+                  >
                     Nepal
                   </span>
                 </div>
-                {selectedButton === "Nepal" && <MdOutlineVerified size={18} className="text-red-500" />}
+                {selectedButton === "Nepal" && (
+                  <MdOutlineVerified size={18} className="text-red-500" />
+                )}
               </button>
 
               {/* United States Dropdown Option */}
@@ -137,11 +142,19 @@ const Navbar = () => {
               >
                 <div className="flex items-center gap-2 text-sm">
                   <span>🇺🇸</span>
-                  <span className={selectedButton === "United States" ? "text-red-500" : "text-neutral-700"}>
+                  <span
+                    className={
+                      selectedButton === "United States"
+                        ? "text-red-500"
+                        : "text-neutral-700"
+                    }
+                  >
                     United States
                   </span>
                 </div>
-                {selectedButton === "United States" && <MdOutlineVerified size={18} className="text-red-500" />}
+                {selectedButton === "United States" && (
+                  <MdOutlineVerified size={18} className="text-red-500" />
+                )}
               </button>
             </div>
           )}
@@ -149,22 +162,22 @@ const Navbar = () => {
           <button className="px-4 py-2 text-sm bg-black text-white rounded-full border border-black/8 hover:bg-neutral-800 transition-colors cursor-pointer">
             Add Property +
           </button>
-          
+
           <button className="h-9 w-9 rounded-full border border-black/15 flex items-center justify-center bg-white hover:bg-neutral-50 transition-colors cursor-pointer shadow-sm">
             <span className="bg-blue-800 text-white flex items-center justify-center h-7 w-7 rounded-full font-bold text-xs">
               N
             </span>
           </button>
         </div>
-
       </div>
 
       {/* 2. CATEGORIES ROW CONTAINER */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 pb-4">
         <div className="flex gap-7 text-[7px] items-center overflow-x-auto shrink-0 border-b border-black/4 pb-2 lg:justify-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          {categories.map((cat, i) => (
-            <div
-              key={i}
+          {categories.map((cat) => (
+            <Link
+              href={cat.link}
+              key={cat.label}
               className="flex flex-col shrink-0 items-center gap-1 group cursor-pointer"
             >
               <Image
@@ -177,7 +190,7 @@ const Navbar = () => {
               <p className="text-[10px] font-medium tracking-wide text-neutral-500 group-hover:text-black transition-colors">
                 {cat.label}
               </p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -222,16 +235,26 @@ const Navbar = () => {
                 setIsOpen(false);
               }}
               className={`w-full flex items-center py-2.5 px-4 justify-between rounded-xl border border-black/5 font-medium transition-colors ${
-                selectedButton === "Nepal" ? "bg-neutral-200/60 text-neutral-900" : "bg-white text-neutral-600"
+                selectedButton === "Nepal"
+                  ? "bg-neutral-200/60 text-neutral-900"
+                  : "bg-white text-neutral-600"
               }`}
             >
               <div className="flex items-center gap-2 text-sm">
                 <span>🇳🇵</span>
-                <span className={selectedButton === "Nepal" ? "text-red-500" : "text-neutral-700"}>
+                <span
+                  className={
+                    selectedButton === "Nepal"
+                      ? "text-red-500"
+                      : "text-neutral-700"
+                  }
+                >
                   Nepal
                 </span>
               </div>
-              {selectedButton === "Nepal" && <MdOutlineVerified size={18} className="text-red-500" />}
+              {selectedButton === "Nepal" && (
+                <MdOutlineVerified size={18} className="text-red-500" />
+              )}
             </button>
 
             {/* Mobile United States Trigger */}
@@ -241,16 +264,26 @@ const Navbar = () => {
                 setIsOpen(false);
               }}
               className={`w-full flex items-center py-2.5 px-4 justify-between rounded-xl border border-black/5 font-medium transition-colors ${
-                selectedButton === "United States" ? "bg-neutral-200/60 text-neutral-900" : "bg-white text-neutral-600"
+                selectedButton === "United States"
+                  ? "bg-neutral-200/60 text-neutral-900"
+                  : "bg-white text-neutral-600"
               }`}
             >
               <div className="flex items-center gap-2 text-sm">
                 <span>🇺🇸</span>
-                <span className={selectedButton === "United States" ? "text-red-500" : "text-neutral-700"}>
+                <span
+                  className={
+                    selectedButton === "United States"
+                      ? "text-red-500"
+                      : "text-neutral-700"
+                  }
+                >
                   United States
                 </span>
               </div>
-              {selectedButton === "United States" && <MdOutlineVerified size={18} className="text-red-500" />}
+              {selectedButton === "United States" && (
+                <MdOutlineVerified size={18} className="text-red-500" />
+              )}
             </button>
           </div>
         </div>
