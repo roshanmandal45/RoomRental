@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+
 import { CiHeart, CiLocationOn } from 'react-icons/ci'
 import Img1 from "@/public/FeaturedImages/Img1.avif"
 import Img2 from "@/public/FeaturedImages/Img2.avif"
@@ -9,8 +10,11 @@ import Img6 from "@/public/FeaturedImages/Img6.avif"
 import Img3 from "@/public/CheapestSecImges/Img8.avif"
 import Img8 from "@/public/CheapestSecImges/Img8.avif"
 import Image from 'next/image'
+import { useRouter } from 'next/navigation' 
+
 
 const FeaturedSec = () => {
+  const router = useRouter()
     const categories = [
     { src: Img1, amount: 65000, address: "Balaju Chowk, Ring Road, Kathmandu", room: "1 OFFCIE SPACE" },
     { src: Img2, amount: 25000, address: "Maharajgunj, Kathmandu, Nepal", room: "3 BK" },
@@ -46,7 +50,7 @@ const FeaturedSec = () => {
                 <div key={index} className='flex flex-col gap-3 group cursor-pointer'>
                   
                   {/* Image Wrapper */}
-                  <div className='relative w-full h-[240px] rounded-2xl overflow-hidden border border-black/5 bg-neutral-100 shadow-sm'>
+                  <div onClick={() => router.push('/roomDescription')} className='relative w-full h-[240px] rounded-2xl overflow-hidden border border-black/5 bg-neutral-100 shadow-sm'>
                     <Image  src={cat.src}  alt={`Affordable rental option ${index + 1}`}  fill sizes="(max-w-640px) 100vw, (max-w-768px) 50vw, (max-w-1024px) 33vw, 25vw" className='object-cover group-hover:scale-105 transition-transform duration-300' />
                     <div className='flex w-full justify-between items-center absolute top-0 p-3 z-10 '>
                       <span className='bg-neutral-900/80 backdrop-blur-xs rounded-full px-2.5 py-1 text-white text-[11px] font-medium tracking-wide'>
