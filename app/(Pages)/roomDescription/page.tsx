@@ -19,6 +19,7 @@ import { FaShower } from 'react-icons/fa'
 import { MdKeyboardArrowDown, MdOutlineEmail, MdOutlinePayment } from 'react-icons/md'
 import { LuNewspaper } from 'react-icons/lu'
 import Footer from '@/app/components/Footer'
+import NavbarForPage from '@/app/components/NavbarForPage'
 
 const Map = dynamic(() => import('@/app/components/Leaflet'), {
   ssr: false,
@@ -44,7 +45,7 @@ const toggleFaq = (index: number) => {
   ]
   return (
     <div className='min-h-screen bg-white'>
-      <Navbar />
+      <NavbarForPage />
 
       {/* Main Div ? */}
       <main className='max-w-345 mx-auto px-4 sm:px-8 md:px-12 py-8 flex flex-col gap-8'>
