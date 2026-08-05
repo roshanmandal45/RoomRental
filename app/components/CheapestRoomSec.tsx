@@ -3,6 +3,9 @@
 import Image from 'next/image'
 import { useRouter } from 'next/navigation' 
 import React from 'react'
+
+import { CiHeart, CiLocationOn } from 'react-icons/ci'
+
 import Img1 from "@/public/CheapestSecImges/Img1.avif"
 import Img2 from "@/public/CheapestSecImges/Img2.avif"
 import Img3 from "@/public/CheapestSecImges/Img3.avif"
@@ -11,7 +14,9 @@ import Img5 from "@/public/CheapestSecImges/Img5.avif"
 import Img6 from "@/public/CheapestSecImges/Img6.avif"
 import Img7 from "@/public/CheapestSecImges/Img7.avif"
 import Img8 from "@/public/CheapestSecImges/Img8.avif"
-import { CiHeart, CiLocationOn } from 'react-icons/ci'
+
+// CRITICAL: Dynamically import the Map component with server-side rendering disabled
+
 
 const categories = [
     { src: Img1, amount: 9000, address: "Safipur, Ranhola, New Delhi, India", room: "1 FLAT" },

@@ -59,7 +59,9 @@ const Navbar = () => {
         
         {/* Logo and Mobile Toggle Header */}
         <div className="flex items-center justify-between lg:shrink-0">
+          <Link href={"/"}>
           <Image src={Logo} alt="logo" width={130} height={35} priority />
+          </Link>
           <span
             onClick={() => setIsOpen((prev) => !prev)}
             className="border border-black/10 h-9 w-9 rounded-full flex items-center justify-center lg:hidden cursor-pointer"
