@@ -3,18 +3,14 @@
 import React, { useState } from 'react'
 import img1 from "@/public/roomDescrImages/img1.avif"
 import Image from 'next/image'
-import Navbar from '@/app/components/Navbar'
 import { CiHeart, CiLocationOn, CiPhone, CiWifiOn } from 'react-icons/ci'
 import Profile from "@/public/roomDescrImages/Profile.avif"
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation' 
-
-
 import Img1_1 from "@/public/CheapestSecImges/Img1.avif"
 import Img2 from "@/public/CheapestSecImges/Img2.avif"
 import Img3 from "@/public/CheapestSecImges/Img3.avif"
 import Img4 from "@/public/CheapestSecImges/Img4.avif"
-
 import { FaShower } from 'react-icons/fa'
 import { MdKeyboardArrowDown, MdOutlineEmail, MdOutlinePayment } from 'react-icons/md'
 import { LuNewspaper } from 'react-icons/lu'
