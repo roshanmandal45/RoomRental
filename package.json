@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "jodit-react": "^5.4.70",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.28.0",
     "mongodb": "^7.5.0",
