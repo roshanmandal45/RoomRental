@@ -17,6 +17,7 @@ import { IoMenuOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { MdOutlineVerified } from "react-icons/md";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const categories = [
   { src: room, label: "ROOM", link: "/exploreproperty" },
@@ -36,6 +37,8 @@ const Navbar = () => {
   const [btnOpen, setBtnOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState("Nepal");
   const [scrolled, setScrolled] = useState(false);
+
+  const router = useRouter()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -159,7 +162,7 @@ const Navbar = () => {
             </div>
           )}
 
-          <button className="px-4 py-2 text-sm bg-black text-white rounded-full border border-black/8 hover:bg-neutral-800 transition-colors cursor-pointer">
+          <button onClick={() => (router.push('/addProperty'))} className="px-4 py-2 text-sm bg-black text-white rounded-full border border-black/8 hover:bg-neutral-800 transition-colors cursor-pointer">
             Add Property +
           </button>
 
