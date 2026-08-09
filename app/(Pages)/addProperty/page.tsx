@@ -1,16 +1,11 @@
 "use client"
 
-import React from 'react'
+import React, { useRef } from "react";
 import Image from 'next/image'
-import { CiDeliveryTruck, CiDroplet, CiHeart, CiImageOn, CiLocationOn, CiPhone, CiWifiOn } from 'react-icons/ci'
-import Img1_1 from "@/public/CheapestSecImges/Img1.avif"
-import Img2 from "@/public/CheapestSecImges/Img2.avif"
-import Img3 from "@/public/CheapestSecImges/Img3.avif"
-import Img4 from "@/public/CheapestSecImges/Img4.avif"
+import { CiDeliveryTruck, CiDroplet, CiImageOn, CiLocationOn, CiWifiOn } from 'react-icons/ci'
 import bannerImg from "@/public/addPropertyImages/banner.webp"
 import { FaPhoneAlt, FaRegClock } from 'react-icons/fa'
-import { MdChair, MdOutlineEmail, MdOutlinePayment, MdOutlineShower, MdOutlineVerifiedUser } from 'react-icons/md'
-import { LuNewspaper } from 'react-icons/lu'
+import { MdChair, MdOutlineEmail, MdOutlineShower, MdOutlineVerifiedUser } from 'react-icons/md'
 import Footer from '@/app/components/Footer'
 import NavbarForPage from '@/app/components/NavbarForPage'
 import { GoUpload, GoVerified } from 'react-icons/go'
@@ -46,6 +41,20 @@ const cats = [
 
 const RoomDescription = () => {
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleContainerClick = () => {
+    fileInputRef.current?.click();
+  };
+
+const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      console.log("Selected files:", files);
+    }
+  };
+   
+
 
   return (
     <div className='min-h-screen bg-white'>
@@ -53,13 +62,13 @@ const RoomDescription = () => {
 
       {/* Main Div ? */}
       <main className='max-w-345 mx-auto px-4 sm:px-8 md:px-12 py-8 flex flex-col gap-8'>
-        <div className='relative w-full rounded-3xl  bg-linear-to-r from-[#FF2865] via-[#D81B54] to-[#800C35] p-6'>
+        <div className='relative w-full rounded-3xl  bg-linear-to-r from-[#FF2865] via-[#D81B54] to-[#800C35] p-6 lg:p-10'>
          {/* Inner Content Wrapper  */}
          <div className='flex justify-between items-stretch'>
             <div className='flex flex-col gap-4 text-white max-w-xl'>
 
             <span className='rounded-full bg-[#F84F75] text-white flex w-fit py-1 px-3 text-[12px] items-center gap-2'> <GoVerified  size={14}/> Free to list & publish </span>
-            <h3 className='text-3xl font-semibold'>List Your Property</h3>
+            <h3 className='text-3xl font-bold'>List Your Property</h3>
             <p>Connect with verified tenants across Nepal. Fill in a few details, add clear photos, and start earning today.</p>
             <div className='flex gap-3 flex-wrap mt-2'>
             <span className='rounded-full bg-[#F84F75] text-white flex w-fit py-1 px-3 text-[12px] items-center gap-2 whitespace-nowrap'> <MdOutlineVerifiedUser size={16}/> Verified tenants </span>
@@ -69,7 +78,7 @@ const RoomDescription = () => {
             </div>
 
             <div className='hidden lg:block overflow-hidden relative shrink-0 w-80'>
-                <Image src={bannerImg} alt='banner' className='object-cover w-full rounded-2xl' />
+                <Image src={bannerImg} alt='banner' fill className='object-cover w-full rounded-2xl' />
             </div>
          </div>
         </div>
@@ -79,8 +88,8 @@ const RoomDescription = () => {
           {/* The Side Bar  */}
           <div className='lg:order-2 lg:h-full lg:w-1/2 lg:sticky top-40 flex flex-col gap-5 order-2'>
 
-           <div className='w-full rounded-2xl border border-black/10 p-6 '>
-           <div className='flex flex-col gap-3 bg-[#FFFAFB] border-b border-gray-100 p-4 '>
+           <div className='w-full rounded-2xl border border-black/10'>
+           <div className='flex flex-col gap-3 bg-[#FFFAFB] border-b border-gray-100 p-4 rounded-2xl'>
               <h3 className='font-semibold text-lg'>Review & Publish</h3>
               <span>0 of 7 items ready</span>
               <div className=' rounded-xl py-1 w-full bg-gray-300'></div>
@@ -136,7 +145,7 @@ const RoomDescription = () => {
            <input type="radio" />
            <p className='text-blue-700'>Share to Facebook Page</p>
                     </div>
-           <GoVerified/>
+           <GoVerified className='text-blue-700' size={16}/>
                 </div>
                 <p className='pl-5 text-blue-600 text-[12px] '>Automatically share to our Facebook page for maximum reach</p>
                 </div>
@@ -172,13 +181,13 @@ const RoomDescription = () => {
       {cats.map((item, index) => (
         <div 
           key={index} 
-          className='border border-black/10 flex items-center justify-center rounded-2xl px-4 py-6 hover:shadow-sm transition-shadow cursor-pointer'
+          className='border border-black/10 flex items-center justify-center rounded-2xl px-4 py-6 transition-all cursor-pointer group hover:bg-gray-100 hover:border-red-300'
         >
           <div className='flex flex-col items-center gap-2'>
             <Image 
               src={item.icon} 
               alt={item.alt} 
-              className='scale-125 transition-transform' 
+              className='transition-transform group-hover:scale-[1.15] duration-300' 
             />
             <p className='text-[12px] font-medium text-neutral-800'>{item.label}</p>
           </div>
@@ -187,15 +196,17 @@ const RoomDescription = () => {
     </div>
 
               {/* Lower Div  */}
-              <div className='p-6 bg-[#F9FAFB] rounded-2xl flex flex-col gap-1'>
+              <div className='p-6 bg-[#F9FAFB] rounded-2xl flex flex-col gap-1 lg:flex-row lg:gap-4 lg:items-center '>
+                <div className=''>
                 <p className='font-semibold text-lg'>How many units?</p>
-                <span className='text-gray-600 text-sm'>Total numbers of rooms / units available</span>
-                {/* Buttons  */}
-                <div className='border border-gray/30 flex items-center gap-2 rounded-xl w-fit mt-2 bg-white shadow-sm'>
-                    <button className='flex h-10 w-10 items-center justify-center text-gray-500'>-</button>
-                    <input className='class="h-10 w-16 border-x  border-gray-200 bg-transparent text-center text-sm font-semibold text-gray-900 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"' placeholder='1'/>
-                    <button className='flex h-10 w-10 items-center justify-center text-gray-500'>+</button>
+                <span className='text-gray-600 text-[12px]'>Total numbers of rooms / units available</span>
                 </div>
+                {/* Buttons  */}
+                <div className='border border-black/10 flex items-center rounded-xl w-fit mt-2 bg-white overflow-hidden'>
+                    <button className='flex h-10 w-10 items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-200 transition-colors overflow-hidden'>-</button>
+                    <input className='h-10 w-16 border-x border-gray-200 bg-transparent text-center text-sm font-semibold text-gray-900 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none' placeholder='1'/>
+                    <button className='flex h-10 w-10 items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-200 transition-colors overflow-hidden'>+</button>
+                </div> 
               </div>
 
             </div>
@@ -204,7 +215,7 @@ const RoomDescription = () => {
           <div className='border border-black/10 p-6 rounded-2xl'>
             <div className='flex flex-col gap-4'>
              <div className='flex gap-3'>
-                    <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>1</span>
+                    <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>2</span>
                     <div className='flex flex-col gap-1'>
               <h3 className='font-semibold text-lg'>Title & Description</h3>
               <p className='text-gray-600 text-sm'>Make your listing stand out with a clear headline and details</p>
@@ -229,7 +240,7 @@ const RoomDescription = () => {
           <div className='border border-black/10 p-6 rounded-2xl'>
             <div className='flex flex-col gap-8'>
              <div className='flex gap-3'>
-                    <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>1</span>
+                    <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>3</span>
                     <div className='flex flex-col gap-1'>
               <h3 className='font-semibold text-lg'>Location</h3>
               <p className='text-gray-600 text-sm'>Search and select the exact address of your property</p>
@@ -247,14 +258,18 @@ const RoomDescription = () => {
           <div className='border border-black/10 p-6 rounded-2xl'>
             <div className='flex flex-col gap-4'>
               <div className='flex gap-3'>
-                    <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>1</span>
+                    <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>4</span>
                     <div className='flex flex-col gap-1'>
               <h3 className='font-semibold text-lg'>Rent & Contact</h3>
               <p className='text-gray-600 text-sm'>Set your monthly rent and the number tenants should call</p>
                     </div>
                 </div>
 
-                 <div className='flex flex-col gap-2'>
+
+              <div className='flex flex-col gap-3 lg:flex-row lg:items-center'>
+
+            
+                 <div className='flex flex-col gap-2 w-full'>
                     <p className='flex text-sm items-center gap-1 font-semibold'>Mobile Number <span className='text-red-500'>*</span></p>
               <div className='flex gap-2 items-center border border-gray-300 text-gray-500 text-sm rounded-xl py-2 px-3 w-full justify-between'>
                 <div className='flex items-center gap-3'>
@@ -267,7 +282,7 @@ const RoomDescription = () => {
              </div>
                 </div>
 
-                 <div className='flex flex-col gap-2'>
+                 <div className='flex flex-col gap-2 w-full'>
                     <p className='flex text-sm items-center gap-1 font-semibold'>Monthly Rent <span className='text-red-500'>*</span></p>
               <div className='flex gap-2 items-center border border-gray-300 text-gray-500 text-sm rounded-xl py-2 px-3 w-full justify-between'>
                 <div className='flex items-center gap-3'>
@@ -279,6 +294,7 @@ const RoomDescription = () => {
                 </div>
              </div>
                 </div>
+                  </div>
             </div>
           </div>
 
@@ -295,22 +311,30 @@ const RoomDescription = () => {
                 </div>
 
             {/* Buttons Div  */}
-                <div className='flex flex-wrap gap-3 '>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px]'> <CiWifiOn size={16}/> WIFI </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px]'> <CiDroplet  size={16}/> WATER </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px]'> <CiDeliveryTruck  size={16}/> PARKING </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px]'> <IoMdBus   size={16}/> BUS STOP </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px]'> <BsCupHot    size={16}/> MODULAR KITCHEN </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px]'> <FaHouse size={16}/> ATTACHED BATHROOM </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px]'> <MdOutlineShower  size={16}/> SHOWER  </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px]'> <MdChair   size={16}/> Furniture  </button>
+                <div className='flex flex-wrap gap-3'>
+                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <CiWifiOn size={16}/> WIFI </button>
+                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <CiDroplet  size={16}/> WATER </button>
+                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <CiDeliveryTruck  size={16}/> PARKING </button>
+                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <IoMdBus   size={16}/> BUS STOP </button>
+                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <BsCupHot    size={16}/> MODULAR KITCHEN </button>
+                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <FaHouse size={16}/> ATTACHED BATHROOM </button>
+                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <MdOutlineShower  size={16}/> SHOWER  </button>
+                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <MdChair   size={16}/> Furniture  </button>
 
                 </div>
             </div>
           </div>
 
 
-          <div className='border border-black/10 p-6 rounded-2xl'>
+          <div className='border border-black/10 p-6 rounded-2xl' onClick={handleContainerClick}>
+          <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
+        multiple
+        className="hidden"
+      />
             <div className='flex flex-col gap-6 pb-8 border-b border-black/5'>
               <div className='flex gap-3'>
                     <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>6</span>
@@ -328,9 +352,9 @@ const RoomDescription = () => {
                 </div>
 
                 {/* Upload Section  */}
-                <div className='border-dotted p-6 flex items-center justify-center bg-[#F6F7F8]'>
+                <div className='border-2 border-dashed border-gray-300 p-6 flex items-center justify-center bg-[#F6F7F8] rounded-2xl'>
                     <div className='flex flex-col gap-3 items-center'>
-                       <span className='h-12 w-12 rounded-full bg-white text-red-500 shrink-0 flex items-center justify-center'> <GoUpload size={25} className=''/> </span>
+                       <span className='h-12 w-12 rounded-full bg-white text-red-500 shrink-0 flex items-center justify-center cursor-pointer'> <GoUpload size={25} className=''/> </span>
                        <div className='flex flex-col gap-1'>
                        <h3 className='font-semibold text-lg text-[16px]'>Click to upload property images</h3>
                        <span className='text-center text-gray-600 text-[12px]'>or drag and drop your images here</span>
@@ -339,7 +363,7 @@ const RoomDescription = () => {
                 </div>
 
                     {/* Image Guideliens  */}
-                      <div className='border-dotted p-6 bg-[#EFF4FF] '>
+                      <div className='border-dotted p-6 bg-[#EFF4FF] rounded-2xl  '>
                    <div className='flex flex-col gap-3 text-blue-500'>
                     <div className='flex items-center gap-2'>
                   <CiImageOn size={18}/>
