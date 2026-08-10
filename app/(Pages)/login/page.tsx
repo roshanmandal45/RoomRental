@@ -27,10 +27,7 @@ export default function Login() {
     loading: authLoading,
   } = useAuth();
 
-  // =========================
-  // GOOGLE REDIRECT RESULT
-  // =========================
-
+  
   useEffect(() => {
     const handleRedirectResult = async () => {
       try {
@@ -63,10 +60,7 @@ export default function Login() {
     handleRedirectResult();
   }, [router]);
 
-  // =========================
-  // AUTH STATE REDIRECT
-  // =========================
-
+ 
   useEffect(() => {
     if (!authLoading && user) {
       console.log(
@@ -77,9 +71,7 @@ export default function Login() {
     }
   }, [user, authLoading, router]);
 
-  // =========================
-  // EMAIL LOGIN
-  // =========================
+
 
   const handleEmailLogin = async (
     e: React.FormEvent<HTMLFormElement>
@@ -108,7 +100,7 @@ export default function Login() {
       router.replace("/");
     } catch (err: any) {
       console.error(
-        "🔥 EMAIL LOGIN ERROR:",
+        " EMAIL LOGIN ERROR:",
         err
       );
 
@@ -121,12 +113,9 @@ export default function Login() {
     }
   };
 
-  // =========================
-  // GOOGLE LOGIN
-  // =========================
-
+  
   const handleGoogleLogin = async () => {
-    console.log("🔥 GOOGLE LOGIN CLICKED");
+    console.log("GOOGLE LOGIN CLICKED");
 
     setError("");
     setLoading(true);
@@ -140,7 +129,7 @@ export default function Login() {
       });
 
       console.log(
-        "🔥 REDIRECTING TO GOOGLE..."
+        " REDIRECTING TO GOOGLE..."
       );
 
       await signInWithRedirect(
@@ -148,11 +137,10 @@ export default function Login() {
         provider
       );
 
-      // The browser leaves this page here.
-      // Firebase will return to /login.
+      
     } catch (err: any) {
       console.error(
-        "🔥 GOOGLE LOGIN ERROR:",
+        " GOOGLE LOGIN ERROR:",
         err
       );
 
@@ -165,9 +153,6 @@ export default function Login() {
     }
   };
 
-  // =========================
-  // PAGE
-  // =========================
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
