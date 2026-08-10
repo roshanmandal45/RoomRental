@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AuthProvider } from "./context/AuthContext";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
@@ -22,8 +23,13 @@ export default function RootLayout({
       lang="en"
       className={`${plusJakarta.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        {children}
+      <body
+        className="min-h-full flex flex-col"
+        suppressHydrationWarning
+      >
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
