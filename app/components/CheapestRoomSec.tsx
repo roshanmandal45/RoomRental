@@ -6,14 +6,14 @@ import React from 'react'
 
 import { CiHeart, CiLocationOn } from 'react-icons/ci'
 
-import Img1 from "@/public/CheapestSecImges/Img1.avif"
-import Img2 from "@/public/CheapestSecImges/Img2.avif"
-import Img3 from "@/public/CheapestSecImges/Img3.avif"
-import Img4 from "@/public/CheapestSecImges/Img4.avif"
-import Img5 from "@/public/CheapestSecImges/Img5.avif"
-import Img6 from "@/public/CheapestSecImges/Img6.avif"
-import Img7 from "@/public/CheapestSecImges/Img7.avif"
-import Img8 from "@/public/CheapestSecImges/Img8.avif"
+import Img1 from "@/public/CheapestSecImges/Img1.webp"
+import Img2 from "@/public/CheapestSecImges/Img2.webp"
+import Img3 from "@/public/CheapestSecImges/Img3.webp"
+import Img4 from "@/public/CheapestSecImges/Img4.webp"
+import Img5 from "@/public/CheapestSecImges/Img5.webp"
+import Img6 from "@/public/CheapestSecImges/Img6.webp"
+import Img7 from "@/public/CheapestSecImges/Img7.webp"
+import Img8 from "@/public/CheapestSecImges/Img8.webp"
 
 // CRITICAL: Dynamically import the Map component with server-side rendering disabled
 
