@@ -38,7 +38,6 @@
                                                                             ↓
                                                                     19. Recommendation System
 
-
 MongoDB password -- MGaDo27QL9J5rOsZ
 Mongo URI -- mongodb+srv://<db_username>:MGaDo27QL9J5rOsZ@cluster0.jubycl0.mongodb.net/?appName=Cluster0
 
@@ -46,7 +45,9 @@ Mongo URI -- mongodb+srv://<db_username>:MGaDo27QL9J5rOsZ@cluster0.jubycl0.mongo
 
 
 
-                   "Why Room Sewa" Section : Navin
-                   "Earn with Room Sewa": Roshan
-                   "Quick Rental Tips" : Navin
-                   "Footer" : Roshan
+next task:
+mongodb 
+Authentication
+Imagekit for upload of images
+About Us blogs and privacy policy and terms conditions pages
+
