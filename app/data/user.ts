@@ -1,6 +1,6 @@
 
 
-const users = [
+const usersData = [
   {
     name: "Aarav Sharma",
     email: "aarav.sharma@example.com",
@@ -59,4 +59,4 @@ const users = [
   },
 ];
 
-export default users;
+export default usersData
