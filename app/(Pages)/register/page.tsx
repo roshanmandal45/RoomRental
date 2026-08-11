@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
-  signInWithRedirect,
+  signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
 
@@ -23,121 +23,69 @@ const Register = () => {
 
   const router = useRouter();
 
-
-
-  const handleRegister = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    console.log(" REGISTER CLICKED");
 
     setError("");
     setLoading(true);
 
     try {
-      // Create Firebase account
-      const result =
-        await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-
-      console.log(
-        "🔥 ACCOUNT CREATED:",
-        result.user
+      // 1. Create account in Firebase
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
       );
 
-      // Save user's name in Firebase profile
+      // 2. Set profile display name
       if (name.trim()) {
         await updateProfile(result.user, {
           displayName: name.trim(),
         });
       }
 
-      console.log(
-        "PROFILE UPDATED"
-      );
-
-      // Redirect to main page
+      // 3. Navigate to home ONLY after explicit creation
       router.replace("/");
     } catch (err: any) {
-      console.error(
-        "REGISTER ERROR:",
-        err
-      );
+      console.error("REGISTER ERROR:", err);
 
-      if (
-        err?.code ===
-        "auth/email-already-in-use"
-      ) {
-        setError(
-          "An account with this email already exists."
-        );
-      } else if (
-        err?.code ===
-        "auth/weak-password"
-      ) {
-        setError(
-          "Password should be at least 6 characters."
-        );
-      } else if (
-        err?.code ===
-        "auth/invalid-email"
-      ) {
-        setError(
-          "Please enter a valid email address."
-        );
+      if (err?.code === "auth/email-already-in-use") {
+        setError("An account with this email already exists.");
+      } else if (err?.code === "auth/weak-password") {
+        setError("Password should be at least 6 characters.");
+      } else if (err?.code === "auth/invalid-email") {
+        setError("Please enter a valid email address.");
       } else {
-        setError(
-          err?.message ||
-            "Registration failed."
-        );
+        setError(err?.message || "Registration failed.");
       }
-    } finally {
       setLoading(false);
     }
   };
 
-  
-
+ 
   const handleGoogleRegister = async () => {
-    console.log(
-      " GOOGLE REGISTER CLICKED"
-    );
-
     setError("");
     setLoading(true);
 
     try {
-      const provider =
-        new GoogleAuthProvider();
-
+      const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
         prompt: "select_account",
       });
 
-      console.log(
-        "🔥 REDIRECTING TO GOOGLE..."
-      );
+      await signInWithPopup(auth, provider);
 
-      await signInWithRedirect(
-        auth,
-        provider
-      );
-
+      router.replace("/");
     } catch (err: any) {
-      console.error(
-        "GOOGLE REGISTER ERROR:",
-        err
-      );
+      console.error("GOOGLE REGISTER ERROR:", err);
 
-      setError(
-        err?.message ||
-          "Google registration failed."
-      );
-
+      if (err?.code === "auth/popup-blocked") {
+        setError("Pop-up blocked by browser. Please allow pop-ups for this site.");
+      } else if (err?.code === "auth/popup-closed-by-user") {
+        setError("Registration popup was closed before completing.");
+      } else {
+        setError("Google registration failed.");
+      }
       setLoading(false);
     }
   };
@@ -145,29 +93,21 @@ const Register = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="bg-white rounded-xl p-6 shadow-md mx-auto w-full max-w-md">
-
         {/* Title */}
-
         <div className="text-center text-2xl font-medium">
           <h1>Register</h1>
         </div>
 
         {/* Error */}
-
         {error && (
           <div className="mt-4 bg-red-100 text-red-700 p-3 rounded-lg text-sm text-center">
             {error}
           </div>
         )}
 
-        {/* Registration Form */}
-
-        <form
-          className="flex flex-col gap-5 mt-6"
-          onSubmit={handleRegister}
-        >
+        {/* Form */}
+        <form className="flex flex-col gap-5 mt-6" onSubmit={handleRegister}>
           {/* Name */}
-
           <div className="relative">
             <label
               htmlFor="name"
@@ -175,22 +115,18 @@ const Register = () => {
             >
               Name:
             </label>
-
             <input
               id="name"
               type="text"
               placeholder="Enter your name"
-              className="border p-3 rounded w-full"
+              className="border p-3 rounded w-full outline-none focus:border-black"
               value={name}
-              onChange={(e) =>
-                setName(e.target.value)
-              }
+              onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
 
           {/* Email */}
-
           <div className="relative">
             <label
               htmlFor="email"
@@ -198,22 +134,18 @@ const Register = () => {
             >
               Email:
             </label>
-
             <input
               id="email"
               type="email"
               placeholder="Enter your email"
-              className="border p-3 rounded w-full"
+              className="border p-3 rounded w-full outline-none focus:border-black"
               value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
 
           {/* Password */}
-
           <div className="relative">
             <label
               htmlFor="password"
@@ -221,43 +153,31 @@ const Register = () => {
             >
               Password:
             </label>
-
             <input
               id="password"
               type="password"
               placeholder="Enter your password"
-              className="border p-3 rounded w-full"
+              className="border p-3 rounded w-full outline-none focus:border-black"
               value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
+              onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
             />
           </div>
 
-          {/* Register Button */}
-
+          {/* Submit */}
           <div className="text-center">
             <button
               type="submit"
               disabled={loading}
               className="w-full bg-black text-white py-2 cursor-pointer rounded-lg hover:bg-gray-800 transition disabled:bg-gray-400"
             >
-              {loading
-                ? "Creating account..."
-                : "Register"}
+              {loading ? "Creating account..." : "Register"}
             </button>
           </div>
         </form>
 
-        {/* OR */}
-
-        <div className="text-center text-gray-500 my-4">
-          or
-        </div>
-
-        {/* Google */}
+        <div className="text-center text-gray-500 my-4">or</div>
 
         <div>
           <button
@@ -271,22 +191,15 @@ const Register = () => {
               className="w-5 h-5 pointer-events-none"
               src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
             />
-
             <span>
-              {loading
-                ? "Redirecting..."
-                : "Continue with Google"}
+              {loading ? "Connecting..." : "Continue with Google"}
             </span>
           </button>
         </div>
 
-        {/* Login */}
-
+        {/* Login Link */}
         <div className="flex items-center justify-center gap-1 mt-4 text-sm">
-          <span>
-            Already have an account?
-          </span>
-
+          <span>Already have an account?</span>
           <Link
             href="/login"
             className="text-blue-700 hover:underline font-medium"
@@ -294,7 +207,6 @@ const Register = () => {
             Login
           </Link>
         </div>
-
       </div>
     </div>
   );
