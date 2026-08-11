@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "firebase": "^12.17.1",
     "jodit-react": "^5.4.70",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.28.0",
