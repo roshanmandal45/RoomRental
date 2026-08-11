@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "tsx app/seed/seed.ts"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "firebase": "^12.17.1",
     "jodit-react": "^5.4.70",
     "leaflet": "^1.9.4",
@@ -30,6 +32,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
     "tailwindcss": "^4",
+    "tsx": "^4.23.12",
     "typescript": "^5"
   }
 }

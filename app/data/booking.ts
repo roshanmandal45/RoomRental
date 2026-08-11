@@ -1,4 +1,4 @@
-const bookings = [
+const bookingsData = [
   {
     property: "PROPERTY_1",
     renter: "RENTER_1",
@@ -84,4 +84,4 @@ const bookings = [
   },
 ];
 
-export default bookings;
+export default bookingsData;

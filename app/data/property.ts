@@ -1,4 +1,4 @@
-const properties = [
+const propertiesData = [
   {
     owner: "OWNER_1",
 
@@ -275,4 +275,4 @@ const properties = [
   },
 ];
 
-export default properties;
+export default propertiesData;
