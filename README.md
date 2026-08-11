@@ -38,8 +38,7 @@
                                                                             ↓
                                                                     19. Recommendation System
 
-MongoDB password -- MGaDo27QL9J5rOsZ
-Mongo URI -- mongodb+srv://<db_username>:MGaDo27QL9J5rOsZ@cluster0.jubycl0.mongodb.net/?appName=Cluster0
+
 
 
 

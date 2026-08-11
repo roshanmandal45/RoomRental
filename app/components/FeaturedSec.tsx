@@ -1,14 +1,14 @@
 "use client"
 
 import { CiHeart, CiLocationOn } from 'react-icons/ci'
-import Img1 from "@/public/FeaturedImages/Img1.avif"
-import Img2 from "@/public/FeaturedImages/Img2.avif"
-import Img7 from "@/public/FeaturedImages/Img3.avif"
-import Img4 from "@/public/FeaturedImages/Img4.avif"
-import Img5 from "@/public/FeaturedImages/Img5.avif"
-import Img6 from "@/public/FeaturedImages/Img6.avif"
-import Img3 from "@/public/CheapestSecImges/Img8.avif"
-import Img8 from "@/public/CheapestSecImges/Img8.avif"
+import Img1 from "@/public/FeaturedImages/Img1.webp"
+import Img2 from "@/public/FeaturedImages/Img2.webp"
+import Img7 from "@/public/FeaturedImages/Img3.webp"
+import Img4 from "@/public/FeaturedImages/Img4.webp"
+import Img5 from "@/public/FeaturedImages/Img5.webp"
+import Img6 from "@/public/FeaturedImages/Img6.webp"
+import Img3 from "@/public/CheapestSecImges/Img8.webp"
+import Img8 from "@/public/CheapestSecImges/Img8.webp"
 import Image from 'next/image'
 import { useRouter } from 'next/navigation' 
 
