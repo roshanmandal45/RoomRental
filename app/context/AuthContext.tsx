@@ -16,9 +16,13 @@ import {
 
 import { auth } from "../lib/firebase";
 
+// Export User type so other components can import it easily
+export type { User };
+
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isAuthenticated: boolean; // Added helper boolean
   logout: () => Promise<void>;
 }
 
@@ -57,6 +61,7 @@ export function AuthProvider({
       value={{
         user,
         loading,
+        isAuthenticated: !!user, // true if user object exists
         logout,
       }}
     >
