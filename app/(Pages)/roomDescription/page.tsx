@@ -1,10 +1,10 @@
 "use client"
 
 import React, { useState } from 'react'
-import img1 from "@/public/roomDescrImages/img1.avif"
+import img1 from "@/public/roomDescrImages/img1.webp"
 import Image from 'next/image'
 import { CiHeart, CiLocationOn, CiPhone, CiWifiOn } from 'react-icons/ci'
-import Profile from "@/public/roomDescrImages/Profile.avif"
+import Profile from "@/public/roomDescrImages/Profile.webp"
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation' 
 import Img1_1 from "@/public/CheapestSecImges/Img1.webp"
