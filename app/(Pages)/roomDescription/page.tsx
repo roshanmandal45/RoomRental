@@ -27,6 +27,57 @@ const RoomDescription = () => {
   const sampleCoordinates: [number, number] = [28.6476, 77.0501]
   const router = useRouter()
 
+ const handlePayment = async () => {
+  try {
+    const transactionUuid = `ROOM-${Date.now()}`;
+
+    const response = await fetch("/api/payment/esewa", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        amount: 9000,
+        transactionUuid,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("eSewa API error:", data);
+      return;
+    }
+
+    console.log("eSewa payment data:", data);
+
+    const form = document.createElement("form");
+
+    form.method = "POST";
+    form.action =
+      "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
+
+    Object.entries(data).forEach(([key, value]) => {
+      const input = document.createElement("input");
+
+      input.type = "hidden";
+      input.name = key;
+      input.value = String(value);
+
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+
+    form.submit();
+
+  } catch (error) {
+    console.error("Payment error:", error);
+  }
+};
+
 const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null)
 
 const toggleFaq = (index: number) => {
@@ -73,8 +124,8 @@ const toggleFaq = (index: number) => {
               <p className='flex justify-between items-center border-b border-black/8 pb-3 text-gray-600 text-sm'> <span className='flex items-center gap-2'> <MdOutlinePayment size={20} /> Room Sewa Wallet (Rental Payment)</span> <span className='font-semibold'>Yes</span></p>
               <p className='flex justify-between items-center border-b border-black/8 pb-3 text-gray-600 text-sm'> <span className='flex items-center gap-2'> <LuNewspaper size={20} /> Require Rental Agreement</span> <span className='font-semibold'>-</span></p>
               <p className='flex justify-between items-center pb-3 text-gray-600 text-sm'> <span>Total / month</span><span className='text-xl font-semibold text-red-500'>रु 9000</span></p>
-              <button className='bg-red-600 text-white rounded-lg flex items-center justify-center p-3 pb-3 font-semibold w-full cursor-pointer'>Request a Visit</button>
-              <span className='text-gray-500 text-sm text-center'>No advance payment required</span>
+              <button onClick={handlePayment} className='bg-red-600 text-white rounded-lg flex items-center justify-center p-3 pb-3 font-semibold w-full cursor-pointer'>Pay Advance</button>
+              <span className='text-gray-500 text-sm text-center'>Advance moeny is refundable for 1 weeks before moving in</span>
             </div>
            </div>
            </div>

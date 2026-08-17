@@ -184,12 +184,13 @@ return (
 
          <div className="relative">
 
+{user ? (
+<>
 <button
 onClick={() => setProfileOpen(!profileOpen)}
 className="h-10 w-10 rounded-full border border-black/15 overflow-hidden"
 >
-
-{user?.photoURL ? (
+{user.photoURL ? (
 <Image
 src={user.photoURL}
 alt="profile"
@@ -199,12 +200,10 @@ className="object-cover"
 />
 ) : (
 <span className="bg-blue-800 text-white flex items-center justify-center h-full w-full font-bold">
-{user?.email?.charAt(0).toUpperCase() || "U"}
+{user.email?.charAt(0).toUpperCase() || "U"}
 </span>
 )}
-
 </button>
-
 
 {profileOpen && user && (
 <div className="absolute right-0 top-12 w-60 bg-white shadow-lg rounded-xl border p-4 z-50">
@@ -241,8 +240,19 @@ className="mt-4 w-full bg-black text-white rounded-lg py-2 text-sm"
 Logout
 </button>
 
-
 </div>
+)}
+
+</>
+) : (
+
+<button
+onClick={() => router.push("/login")}
+className="px-4 py-2 text-sm bg-black text-white rounded-full"
+>
+Login / Register
+</button>
+
 )}
 
 </div>
@@ -289,27 +299,41 @@ Logout
           </button>
           <div className="relative">
 
+{user ? (
+<div className="relative">
+
 <button
-  onClick={() => setProfileOpen(!profileOpen)}
-  className="w-full flex items-center justify-center py-2 rounded-full border border-black/15 bg-white"
+onClick={() => setProfileOpen(!profileOpen)}
+className="w-full flex items-center justify-center py-2 rounded-full border border-black/15 bg-white"
 >
 
-{user?.photoURL ? (
+{user.photoURL ? (
 <Image
-  src={user.photoURL}
-  alt="profile"
-  width={35}
-  height={35}
-  className="rounded-full object-cover"
+src={user.photoURL}
+alt="profile"
+width={35}
+height={35}
+className="rounded-full object-cover"
 />
 ) : (
 <span className="bg-blue-800 text-white flex items-center justify-center h-8 w-8 rounded-full font-bold text-xs">
-  {user?.email?.charAt(0).toUpperCase() || "U"}
+{user.email?.charAt(0).toUpperCase() || "U"}
 </span>
 )}
 
 </button>
 
+</div>
+) : (
+
+<button
+onClick={() => router.push("/login")}
+className="w-full py-2 bg-black text-white rounded-full"
+>
+Login / Register
+</button>
+
+)}
 
 {profileOpen && user && (
 <div className="mt-3 bg-white shadow-lg rounded-xl border p-4">
