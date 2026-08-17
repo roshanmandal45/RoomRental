@@ -22,6 +22,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "@/app/lib/firebase";
 
+
 // const categories = [
 //   { src: room, label: "ROOM", link: "/exploreproperty" },
 //   { src: BK, label: "BK", link: "/exploreproperty" },
