@@ -16,6 +16,8 @@ import { MdKeyboardArrowDown, MdOutlineEmail, MdOutlinePayment } from 'react-ico
 import { LuNewspaper } from 'react-icons/lu'
 import Footer from '@/app/components/Footer'
 import NavbarForPage from '@/app/components/NavbarForPage'
+import { useAuth } from "@/app/context/AuthContext";
+
 
 const Map = dynamic(() => import('@/app/components/Leaflet'), {
   ssr: false,
@@ -26,6 +28,23 @@ const RoomDescription = () => {
   // FIXED: Defined the missing coordinate coordinates array
   const sampleCoordinates: [number, number] = [28.6476, 77.0501]
   const router = useRouter()
+
+  const { user, loading } = useAuth();
+  
+    const handlePublish = () => {
+      if (loading) return;
+  
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+  
+      // User is logged in
+      console.log("Publish property:", user.uid);
+  
+      // Add your property submit logic here
+    };
+  
 
  const handlePayment = async () => {
   try {
@@ -124,7 +143,7 @@ const toggleFaq = (index: number) => {
               <p className='flex justify-between items-center border-b border-black/8 pb-3 text-gray-600 text-sm'> <span className='flex items-center gap-2'> <MdOutlinePayment size={20} /> Room Sewa Wallet (Rental Payment)</span> <span className='font-semibold'>Yes</span></p>
               <p className='flex justify-between items-center border-b border-black/8 pb-3 text-gray-600 text-sm'> <span className='flex items-center gap-2'> <LuNewspaper size={20} /> Require Rental Agreement</span> <span className='font-semibold'>-</span></p>
               <p className='flex justify-between items-center pb-3 text-gray-600 text-sm'> <span>Total / month</span><span className='text-xl font-semibold text-red-500'>रु 9000</span></p>
-              <button onClick={handlePayment} className='bg-red-600 text-white rounded-lg flex items-center justify-center p-3 pb-3 font-semibold w-full cursor-pointer'>Pay Advance</button>
+              <button onClick={() => { if (user) { handlePayment(); } else { handlePublish(); } }} className='bg-red-600 text-white rounded-lg flex items-center justify-center p-3 pb-3 font-semibold w-full cursor-pointer'>Pay Advance</button>
               <span className='text-gray-500 text-sm text-center'>Advance moeny is refundable for 1 weeks before moving in</span>
             </div>
            </div>
