@@ -18,6 +18,9 @@ import { CiSearch } from "react-icons/ci";
 import { MdOutlineVerified } from "react-icons/md";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/context/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "@/app/lib/firebase";
 
 const categories = [
   { src: room, label: "ROOM", link: "/exploreproperty" },
@@ -33,23 +36,36 @@ const categories = [
 ];
 
 const Navbar = () => {
+  
   const [isOpen, setIsOpen] = useState(false);
   const [btnOpen, setBtnOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState("Nepal");
   const [scrolled, setScrolled] = useState(false);
 
   const router = useRouter()
+  const { user } = useAuth();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+const [profileOpen, setProfileOpen] = useState(false);
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+const handleLogout = async () => {
+  await signOut(auth);
+  setProfileOpen(false);
+  router.push("/login");
+};
 
-  return (
+
+useEffect(() => {
+  const handleScroll = () => {
+    setScrolled(window.scrollY > 20);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
+
+return (
     <nav
       className={`sticky top-0 z-50 w-full text-black transition-all duration-300 ${
         scrolled ? "bg-white/80 backdrop-blur-md shadow-md" : "bg-transparent"
@@ -166,11 +182,70 @@ const Navbar = () => {
             Add Property +
           </button>
 
-          <button className="h-9 w-9 rounded-full border border-black/15 flex items-center justify-center bg-white hover:bg-neutral-50 transition-colors cursor-pointer shadow-sm">
-            <span className="bg-blue-800 text-white flex items-center justify-center h-7 w-7 rounded-full font-bold text-xs">
-              N
-            </span>
-          </button>
+         <div className="relative">
+
+<button
+onClick={() => setProfileOpen(!profileOpen)}
+className="h-10 w-10 rounded-full border border-black/15 overflow-hidden"
+>
+
+{user?.photoURL ? (
+<Image
+src={user.photoURL}
+alt="profile"
+width={40}
+height={40}
+className="object-cover"
+/>
+) : (
+<span className="bg-blue-800 text-white flex items-center justify-center h-full w-full font-bold">
+{user?.email?.charAt(0).toUpperCase() || "U"}
+</span>
+)}
+
+</button>
+
+
+{profileOpen && user && (
+<div className="absolute right-0 top-12 w-60 bg-white shadow-lg rounded-xl border p-4 z-50">
+
+<div className="flex items-center gap-3">
+
+{user.photoURL && (
+<Image
+src={user.photoURL}
+width={45}
+height={45}
+alt="profile"
+className="rounded-full"
+/>
+)}
+
+<div>
+<p className="font-semibold text-sm">
+{user.displayName || "User"}
+</p>
+
+<p className="text-xs text-gray-500">
+{user.email}
+</p>
+</div>
+
+</div>
+
+
+<button
+onClick={handleLogout}
+className="mt-4 w-full bg-black text-white rounded-lg py-2 text-sm"
+>
+Logout
+</button>
+
+
+</div>
+)}
+
+</div>
         </div>
       </div>
 
@@ -212,11 +287,70 @@ const Navbar = () => {
           <button className="w-full flex items-center py-2 justify-center bg-black text-white rounded-full border border-black/8 font-medium">
             Add Property +
           </button>
-          <button className="w-full flex items-center py-2 justify-center rounded-full border border-black/15 bg-white">
-            <span className="bg-blue-800 text-white flex items-center justify-center h-7 w-7 rounded-full font-bold text-xs">
-              N
-            </span>
-          </button>
+          <div className="relative">
+
+<button
+  onClick={() => setProfileOpen(!profileOpen)}
+  className="w-full flex items-center justify-center py-2 rounded-full border border-black/15 bg-white"
+>
+
+{user?.photoURL ? (
+<Image
+  src={user.photoURL}
+  alt="profile"
+  width={35}
+  height={35}
+  className="rounded-full object-cover"
+/>
+) : (
+<span className="bg-blue-800 text-white flex items-center justify-center h-8 w-8 rounded-full font-bold text-xs">
+  {user?.email?.charAt(0).toUpperCase() || "U"}
+</span>
+)}
+
+</button>
+
+
+{profileOpen && user && (
+<div className="mt-3 bg-white shadow-lg rounded-xl border p-4">
+
+<div className="flex items-center gap-3">
+
+{user.photoURL && (
+<Image
+src={user.photoURL}
+width={45}
+height={45}
+alt="profile"
+className="rounded-full"
+/>
+)}
+
+<div>
+<p className="font-semibold text-sm">
+{user.displayName || "User"}
+</p>
+
+<p className="text-xs text-gray-500">
+{user.email}
+</p>
+</div>
+
+</div>
+
+
+<button
+onClick={handleLogout}
+className="mt-4 w-full bg-black text-white rounded-lg py-2 text-sm"
+>
+Logout
+</button>
+
+
+</div>
+)}
+
+</div>
 
           <div className="flex flex-col gap-4 font-semibold p-2 text-[15px] border-b border-black/10">
             <Link href="#">About Us</Link>
