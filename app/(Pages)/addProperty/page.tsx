@@ -1,6 +1,8 @@
 "use client"
 
 import React, { useRef } from "react";
+import { useAuth } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
 import Image from 'next/image'
 import { CiDeliveryTruck, CiDroplet, CiImageOn, CiLocationOn, CiWifiOn } from 'react-icons/ci'
 import bannerImg from "@/public/addPropertyImages/banner.webp"
@@ -42,6 +44,23 @@ const cats = [
 const RoomDescription = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  const handlePublish = () => {
+    if (loading) return;
+
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    // User is logged in
+    console.log("Publish property:", user.uid);
+
+    // Add your property submit logic here
+  };
 
   const handleContainerClick = () => {
     fileInputRef.current?.click();
@@ -151,7 +170,13 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                 </div>
 
                </div>
-                <button className='text-white  bg-linear-to-r from-[#FF2865] via-[#D81B54] to-[#800C35] w-full rounded-xl flex items-center justify-center py-2 text-[15px]'>Publish Property</button>
+               <button
+  onClick={handlePublish}
+  disabled={loading}
+  className='text-white bg-linear-to-r from-[#FF2865] via-[#D81B54] to-[#800C35] w-full rounded-xl flex items-center justify-center py-2 text-[15px] disabled:opacity-50'
+>
+  {loading ? "Checking..." : "Publish Property"}
+</button>
                 <div className='text-[12px] flex gap-1 items-center justify-center'>
                     <span className='text-gray-500 flex items-center gap-1'> <MdOutlineEmail size={14} /> Need help? </span>
                       <p className='text-red-500 font-semibold'>support@roomsewa.com.np</p>
