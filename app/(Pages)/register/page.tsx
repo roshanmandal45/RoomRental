@@ -38,11 +38,10 @@ const Register = () => {
       );
 
       // 2. Set profile display name
-      if (name.trim()) {
-        await updateProfile(result.user, {
-          displayName: name.trim(),
-        });
-      }
+     await updateProfile(result.user, {
+  displayName: name.trim(),
+  photoURL: "https://ui-avatars.com/api/?name=" + name.trim(),
+});
 
       // 3. Navigate to home ONLY after explicit creation
       router.replace("/");
