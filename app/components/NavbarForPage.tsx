@@ -17,49 +17,68 @@ import { IoMenuOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { MdOutlineVerified } from "react-icons/md";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/context/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "@/app/lib/firebase";
+
 
 // const categories = [
-//   { src: room, label: "ROOM" },
-//   { src: BK, label: "BK" },
-//   { src: BHK, label: "BHK" },
-//   { src: Apartment, label: "APARTMENT" },
-//   { src: House, label: "HOUSE" },
-//   { src: Flat, label: "FLAT" },
-//   { src: Hostel, label: "HOSTEL" },
-//   { src: Hotel, label: "HOTEL" },
-//   { src: Cottage, label: "COTTAGE" },
-//   { src: Office, label: "OFFICE SPACE" },
+//   { src: room, label: "ROOM", link: "/exploreproperty" },
+//   { src: BK, label: "BK", link: "/exploreproperty" },
+//   { src: BHK, label: "BHK", link: "/exploreproperty" },
+//   { src: Apartment, label: "APARTMENT", link: "/exploreproperty" },
+//   { src: House, label: "HOUSE", link: "/exploreproperty" },
+//   { src: Flat, label: "FLAT", link: "/exploreproperty" },
+//   { src: Hostel, label: "HOSTEL", link: "/exploreproperty" },
+//   { src: Hotel, label: "HOTEL", link: "/exploreproperty" },
+//   { src: Cottage, label: "COTTAGE", link: "/exploreproperty" },
+//   { src: Office, label: "OFFICE SPACE", link: "/exploreproperty" },
 // ];
 
-const NavbarForPage = () => {
+const Navbar = () => {
+  
   const [isOpen, setIsOpen] = useState(false);
   const [btnOpen, setBtnOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState("Nepal");
   const [scrolled, setScrolled] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+  const router = useRouter()
+  const { user } = useAuth();
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+const [profileOpen, setProfileOpen] = useState(false);
 
-  return (
+const handleLogout = async () => {
+  await signOut(auth);
+  setProfileOpen(false);
+  router.push("/login");
+};
+
+
+useEffect(() => {
+  const handleScroll = () => {
+    setScrolled(window.scrollY > 20);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
+
+return (
     <nav
       className={`sticky top-0 z-50 w-full text-black transition-all duration-300 ${
-        scrolled
-          ? "bg-white/80 backdrop-blur-md shadow-md"
-          : "bg-transparent"
+        scrolled ? "bg-white/80 backdrop-blur-md shadow-md" : "bg-transparent"
       }`}
     >
       {/* 1. TOP ROW CONTAINER */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 py-3 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
-        
         {/* Logo and Mobile Toggle Header */}
         <div className="flex items-center justify-between lg:shrink-0">
-          <Image src={Logo} alt="logo" width={130} height={35} priority />
+          <Link href={"/"}>
+            <Image src={Logo} alt="logo" width={130} height={35} priority />
+          </Link>
           <span
             onClick={() => setIsOpen((prev) => !prev)}
             className="border border-black/10 h-9 w-9 rounded-full flex items-center justify-center lg:hidden cursor-pointer"
@@ -114,11 +133,19 @@ const NavbarForPage = () => {
               >
                 <div className="flex items-center gap-2 text-sm">
                   <span>🇳🇵</span>
-                  <span className={selectedButton === "Nepal" ? "text-red-500" : "text-neutral-700"}>
+                  <span
+                    className={
+                      selectedButton === "Nepal"
+                        ? "text-red-500"
+                        : "text-neutral-700"
+                    }
+                  >
                     Nepal
                   </span>
                 </div>
-                {selectedButton === "Nepal" && <MdOutlineVerified size={18} className="text-red-500" />}
+                {selectedButton === "Nepal" && (
+                  <MdOutlineVerified size={18} className="text-red-500" />
+                )}
               </button>
 
               {/* United States Dropdown Option */}
@@ -135,34 +162,111 @@ const NavbarForPage = () => {
               >
                 <div className="flex items-center gap-2 text-sm">
                   <span>🇺🇸</span>
-                  <span className={selectedButton === "United States" ? "text-red-500" : "text-neutral-700"}>
+                  <span
+                    className={
+                      selectedButton === "United States"
+                        ? "text-red-500"
+                        : "text-neutral-700"
+                    }
+                  >
                     United States
                   </span>
                 </div>
-                {selectedButton === "United States" && <MdOutlineVerified size={18} className="text-red-500" />}
+                {selectedButton === "United States" && (
+                  <MdOutlineVerified size={18} className="text-red-500" />
+                )}
               </button>
             </div>
           )}
 
-          <button className="px-4 py-2 text-sm bg-black text-white rounded-full border border-black/8 hover:bg-neutral-800 transition-colors cursor-pointer">
+          <button onClick={() => (router.push('/addProperty'))} className="px-4 py-2 text-sm bg-black text-white rounded-full border border-black/8 hover:bg-neutral-800 transition-colors cursor-pointer">
             Add Property +
           </button>
-          
-          <button className="h-9 w-9 rounded-full border border-black/15 flex items-center justify-center bg-white hover:bg-neutral-50 transition-colors cursor-pointer shadow-sm">
-            <span className="bg-blue-800 text-white flex items-center justify-center h-7 w-7 rounded-full font-bold text-xs">
-              N
-            </span>
-          </button>
-        </div>
 
+         <div className="relative">
+
+{user ? (
+<>
+<button
+onClick={() => setProfileOpen(!profileOpen)}
+className="h-10 w-10 rounded-full border border-black/15 overflow-hidden"
+>
+{user.photoURL ? (
+<Image
+src={user.photoURL}
+alt="profile"
+width={40}
+height={40}
+className="object-cover"
+/>
+) : (
+<span className="bg-blue-800 text-white flex items-center justify-center h-full w-full font-bold">
+{user.email?.charAt(0).toUpperCase() || "U"}
+</span>
+)}
+</button>
+
+{profileOpen && user && (
+<div className="absolute right-0 top-12 w-60 bg-white shadow-lg rounded-xl border p-4 z-50">
+
+<div className="flex items-center gap-3">
+
+{user.photoURL && (
+<Image
+src={user.photoURL}
+width={45}
+height={45}
+alt="profile"
+className="rounded-full"
+/>
+)}
+
+<div>
+<p className="font-semibold text-sm">
+{user.displayName || "User"}
+</p>
+
+<p className="text-xs text-gray-500">
+{user.email}
+</p>
+</div>
+
+</div>
+
+
+<button
+onClick={handleLogout}
+className="mt-4 w-full bg-black text-white rounded-lg py-2 text-sm"
+>
+Logout
+</button>
+
+</div>
+)}
+
+</>
+) : (
+
+<button
+onClick={() => router.push("/login")}
+className="px-4 py-2 text-sm bg-black text-white rounded-full"
+>
+Login / Register
+</button>
+
+)}
+
+</div>
+        </div>
       </div>
 
       {/* 2. CATEGORIES ROW CONTAINER */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 pb-4">
         {/* <div className="flex gap-7 text-[7px] items-center overflow-x-auto shrink-0 border-b border-black/4 pb-2 lg:justify-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          {categories.map((cat, i) => (
-            <div
-              key={i}
+          {categories.map((cat) => (
+            <Link
+              href={cat.link}
+              key={cat.label}
               className="flex flex-col shrink-0 items-center gap-1 group cursor-pointer"
             >
               <Image
@@ -175,7 +279,7 @@ const NavbarForPage = () => {
               <p className="text-[10px] font-medium tracking-wide text-neutral-500 group-hover:text-black transition-colors">
                 {cat.label}
               </p>
-            </div>
+            </Link>
           ))}
         </div> */}
       </div>
@@ -194,11 +298,84 @@ const NavbarForPage = () => {
           <button className="w-full flex items-center py-2 justify-center bg-black text-white rounded-full border border-black/8 font-medium">
             Add Property +
           </button>
-          <button className="w-full flex items-center py-2 justify-center rounded-full border border-black/15 bg-white">
-            <span className="bg-blue-800 text-white flex items-center justify-center h-7 w-7 rounded-full font-bold text-xs">
-              N
-            </span>
-          </button>
+          <div className="relative">
+
+{user ? (
+<div className="relative">
+
+<button
+onClick={() => setProfileOpen(!profileOpen)}
+className="w-full flex items-center justify-center py-2 rounded-full border border-black/15 bg-white"
+>
+
+{user.photoURL ? (
+<Image
+src={user.photoURL}
+alt="profile"
+width={35}
+height={35}
+className="rounded-full object-cover"
+/>
+) : (
+<span className="bg-blue-800 text-white flex items-center justify-center h-8 w-8 rounded-full font-bold text-xs">
+{user.email?.charAt(0).toUpperCase() || "U"}
+</span>
+)}
+
+</button>
+
+</div>
+) : (
+
+<button
+onClick={() => router.push("/login")}
+className="w-full py-2 bg-black text-white rounded-full"
+>
+Login / Register
+</button>
+
+)}
+
+{profileOpen && user && (
+<div className="mt-3 bg-white shadow-lg rounded-xl border p-4">
+
+<div className="flex items-center gap-3">
+
+{user.photoURL && (
+<Image
+src={user.photoURL}
+width={45}
+height={45}
+alt="profile"
+className="rounded-full"
+/>
+)}
+
+<div>
+<p className="font-semibold text-sm">
+{user.displayName || "User"}
+</p>
+
+<p className="text-xs text-gray-500">
+{user.email}
+</p>
+</div>
+
+</div>
+
+
+<button
+onClick={handleLogout}
+className="mt-4 w-full bg-black text-white rounded-lg py-2 text-sm"
+>
+Logout
+</button>
+
+
+</div>
+)}
+
+</div>
 
           <div className="flex flex-col gap-4 font-semibold p-2 text-[15px] border-b border-black/10">
             <Link href="#">About Us</Link>
@@ -220,16 +397,26 @@ const NavbarForPage = () => {
                 setIsOpen(false);
               }}
               className={`w-full flex items-center py-2.5 px-4 justify-between rounded-xl border border-black/5 font-medium transition-colors ${
-                selectedButton === "Nepal" ? "bg-neutral-200/60 text-neutral-900" : "bg-white text-neutral-600"
+                selectedButton === "Nepal"
+                  ? "bg-neutral-200/60 text-neutral-900"
+                  : "bg-white text-neutral-600"
               }`}
             >
               <div className="flex items-center gap-2 text-sm">
                 <span>🇳🇵</span>
-                <span className={selectedButton === "Nepal" ? "text-red-500" : "text-neutral-700"}>
+                <span
+                  className={
+                    selectedButton === "Nepal"
+                      ? "text-red-500"
+                      : "text-neutral-700"
+                  }
+                >
                   Nepal
                 </span>
               </div>
-              {selectedButton === "Nepal" && <MdOutlineVerified size={18} className="text-red-500" />}
+              {selectedButton === "Nepal" && (
+                <MdOutlineVerified size={18} className="text-red-500" />
+              )}
             </button>
 
             {/* Mobile United States Trigger */}
@@ -239,16 +426,26 @@ const NavbarForPage = () => {
                 setIsOpen(false);
               }}
               className={`w-full flex items-center py-2.5 px-4 justify-between rounded-xl border border-black/5 font-medium transition-colors ${
-                selectedButton === "United States" ? "bg-neutral-200/60 text-neutral-900" : "bg-white text-neutral-600"
+                selectedButton === "United States"
+                  ? "bg-neutral-200/60 text-neutral-900"
+                  : "bg-white text-neutral-600"
               }`}
             >
               <div className="flex items-center gap-2 text-sm">
                 <span>🇺🇸</span>
-                <span className={selectedButton === "United States" ? "text-red-500" : "text-neutral-700"}>
+                <span
+                  className={
+                    selectedButton === "United States"
+                      ? "text-red-500"
+                      : "text-neutral-700"
+                  }
+                >
                   United States
                 </span>
               </div>
-              {selectedButton === "United States" && <MdOutlineVerified size={18} className="text-red-500" />}
+              {selectedButton === "United States" && (
+                <MdOutlineVerified size={18} className="text-red-500" />
+              )}
             </button>
           </div>
         </div>
@@ -257,4 +454,4 @@ const NavbarForPage = () => {
   );
 };
 
-export default NavbarForPage;
+export default Navbar;

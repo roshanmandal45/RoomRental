@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 const countries = [
   { code: "NP", name: "Nepal" },
@@ -68,8 +69,13 @@ export default function Footer() {
             <h3 className="font-bold text-xl mb-3">Company</h3>
 
             <ul className="space-y-2 text-gray-600 text-lg">
-              <li className="hover:text-red-600 cursor-pointer">
+       
+              <li>
+                <Link
+                href='/aboutus'
+                  className="hover:text-red-600 cursor-pointer">
                 About Us
+                </Link>
               </li>
 
               <li className="hover:text-red-600 cursor-pointer">
