@@ -23,27 +23,67 @@ const Register = () => {
 
   const router = useRouter();
 
-  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+  // ==============================
+  // Email/Password Registration
+  // ==============================
+  const handleRegister = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
 
     setError("");
     setLoading(true);
 
     try {
-      // 1. Create account in Firebase
+      // 1. Create user in Firebase
       const result = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      // 2. Set profile display name
-     await updateProfile(result.user, {
-  displayName: name.trim(),
-  photoURL: "https://ui-avatars.com/api/?name=" + name.trim(),
-});
+      // 2. Add name and profile image to Firebase user
+      const profileImage =
+        "https://ui-avatars.com/api/?name=" +
+        encodeURIComponent(name.trim());
 
-      // 3. Navigate to home ONLY after explicit creation
+      await updateProfile(result.user, {
+        displayName: name.trim(),
+        photoURL: profileImage,
+      });
+
+      // 3. Get Firebase ID token
+      const token = await result.user.getIdToken();
+
+      // 4. Send Firebase user information to our backend
+      const response = await fetch("/api/users", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+
+        body: JSON.stringify({
+          name: name.trim(),
+          profileImage,
+        }),
+      });
+
+      // 5. Read backend response
+      const data = await response.json();
+
+      // 6. Check if MongoDB user creation failed
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to create MongoDB user"
+        );
+      }
+
+      console.log("Firebase user created:", result.user);
+      console.log("MongoDB user created:", data.user);
+
+      // 7. Everything succeeded
       router.replace("/");
     } catch (err: any) {
       console.error("REGISTER ERROR:", err);
@@ -57,34 +97,79 @@ const Register = () => {
       } else {
         setError(err?.message || "Registration failed.");
       }
+
       setLoading(false);
     }
   };
 
- 
+  // ==============================
+  // Google Registration
+  // ==============================
   const handleGoogleRegister = async () => {
     setError("");
     setLoading(true);
 
     try {
+      // 1. Open Google login
       const provider = new GoogleAuthProvider();
+
       provider.setCustomParameters({
         prompt: "select_account",
       });
 
-      await signInWithPopup(auth, provider);
+      // 2. Sign in with Google through Firebase
+      const result = await signInWithPopup(auth, provider);
 
+      // 3. Get Firebase ID token
+      const token = await result.user.getIdToken();
+
+      // 4. Send Google user information to our backend
+      const response = await fetch("/api/users", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+
+        body: JSON.stringify({
+          name: result.user.displayName || "User",
+          profileImage: result.user.photoURL || "",
+        }),
+      });
+
+      // 5. Read backend response
+      const data = await response.json();
+
+      // 6. Check MongoDB response
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to create MongoDB user"
+        );
+      }
+
+      console.log("Google/Firebase user:", result.user);
+      console.log("MongoDB user:", data.user);
+
+      // 7. Everything succeeded
       router.replace("/");
     } catch (err: any) {
       console.error("GOOGLE REGISTER ERROR:", err);
 
       if (err?.code === "auth/popup-blocked") {
-        setError("Pop-up blocked by browser. Please allow pop-ups for this site.");
+        setError(
+          "Pop-up blocked by browser. Please allow pop-ups for this site."
+        );
       } else if (err?.code === "auth/popup-closed-by-user") {
-        setError("Registration popup was closed before completing.");
+        setError(
+          "Registration popup was closed before completing."
+        );
       } else {
-        setError("Google registration failed.");
+        setError(
+          err?.message || "Google registration failed."
+        );
       }
+
       setLoading(false);
     }
   };
@@ -92,6 +177,7 @@ const Register = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="bg-white rounded-xl p-6 shadow-md mx-auto w-full max-w-md">
+
         {/* Title */}
         <div className="text-center text-2xl font-medium">
           <h1>Register</h1>
@@ -105,7 +191,11 @@ const Register = () => {
         )}
 
         {/* Form */}
-        <form className="flex flex-col gap-5 mt-6" onSubmit={handleRegister}>
+        <form
+          className="flex flex-col gap-5 mt-6"
+          onSubmit={handleRegister}
+        >
+
           {/* Name */}
           <div className="relative">
             <label
@@ -114,6 +204,7 @@ const Register = () => {
             >
               Name:
             </label>
+
             <input
               id="name"
               type="text"
@@ -133,6 +224,7 @@ const Register = () => {
             >
               Email:
             </label>
+
             <input
               id="email"
               type="email"
@@ -152,6 +244,7 @@ const Register = () => {
             >
               Password:
             </label>
+
             <input
               id="password"
               type="password"
@@ -171,13 +264,19 @@ const Register = () => {
               disabled={loading}
               className="w-full bg-black text-white py-2 cursor-pointer rounded-lg hover:bg-gray-800 transition disabled:bg-gray-400"
             >
-              {loading ? "Creating account..." : "Register"}
+              {loading
+                ? "Creating account..."
+                : "Register"}
             </button>
           </div>
         </form>
 
-        <div className="text-center text-gray-500 my-4">or</div>
+        {/* Divider */}
+        <div className="text-center text-gray-500 my-4">
+          or
+        </div>
 
+        {/* Google Register */}
         <div>
           <button
             type="button"
@@ -190,15 +289,21 @@ const Register = () => {
               className="w-5 h-5 pointer-events-none"
               src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
             />
+
             <span>
-              {loading ? "Connecting..." : "Continue with Google"}
+              {loading
+                ? "Connecting..."
+                : "Continue with Google"}
             </span>
           </button>
         </div>
 
         {/* Login Link */}
         <div className="flex items-center justify-center gap-1 mt-4 text-sm">
-          <span>Already have an account?</span>
+          <span>
+            Already have an account?
+          </span>
+
           <Link
             href="/login"
             className="text-blue-700 hover:underline font-medium"
@@ -206,6 +311,7 @@ const Register = () => {
             Login
           </Link>
         </div>
+
       </div>
     </div>
   );
