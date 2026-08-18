@@ -42,8 +42,23 @@ const cats = [
 ];
 
 const RoomDescription = () => {
+  // First Container
+  const [propertyType, setPropertyType] = useState<string | null>(null);
+  const [unit, setUnit] = useState<number>(1);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // Second Container
+  const [title, setTitle] = useState<string>("");
+  const [descri, setDescri] = useState<string>("");
+
+  // Third Container
+  const [location, setLocation] = useState<string>("");
+
+  // Fourth Container
+  const [rent, setRent] = useState<number | "">("");
+  const [phone, setPhone] = useState<string>("");
+
+  // Fifth Container
+  const [facilities, setFacilities] = useState<string[]>([]);
 
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -66,41 +81,27 @@ const RoomDescription = () => {
     fileInputRef.current?.click();
   };
 
-const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      console.log("Selected files:", files);
+  const handleSubmit = async () => {
+  try {
+    const user = auth.currentUser;
+
+    if (!user) {
+      console.log("No user is logged in");
+      return;
     }
-  };
-   
 
+    const token = await user.getIdToken();
 
-  return (
-    <div className='min-h-screen bg-white'>
-      <NavbarForPage />
+    const formData = new FormData();
 
-      {/* Main Div ? */}
-      <main className='max-w-345 mx-auto px-4 sm:px-8 md:px-12 py-8 flex flex-col gap-8'>
-        <div className='relative w-full rounded-3xl  bg-linear-to-r from-[#FF2865] via-[#D81B54] to-[#800C35] p-6 lg:p-10'>
-         {/* Inner Content Wrapper  */}
-         <div className='flex justify-between items-stretch'>
-            <div className='flex flex-col gap-4 text-white max-w-xl'>
-
-            <span className='rounded-full bg-[#F84F75] text-white flex w-fit py-1 px-3 text-[12px] items-center gap-2'> <GoVerified  size={14}/> Free to list & publish </span>
-            <h3 className='text-3xl font-bold'>List Your Property</h3>
-            <p>Connect with verified tenants across Nepal. Fill in a few details, add clear photos, and start earning today.</p>
-            <div className='flex gap-3 flex-wrap mt-2'>
-            <span className='rounded-full bg-[#F84F75] text-white flex w-fit py-1 px-3 text-[12px] items-center gap-2 whitespace-nowrap'> <MdOutlineVerifiedUser size={16}/> Verified tenants </span>
-            <span className='rounded-full bg-[#F84F75] text-white flex w-fit py-1 px-3 text-[12px] items-center gap-2 whitespace-nowrap'> <FaRegClock  size={16}/> Live in minutes </span>
-            <span className='rounded-full bg-[#F84F75] text-white flex w-fit py-1 px-3 text-[12px] items-center gap-2 whitespace-nowrap'> <GoVerified  size={16}/> 24/7 support </span>
-            </div>
-            </div>
-
-            <div className='hidden lg:block overflow-hidden relative shrink-0 w-80'>
-                <Image src={bannerImg} alt='banner' fill className='object-cover w-full rounded-2xl' />
-            </div>
-         </div>
-        </div>
+    formData.append("title", title);
+    formData.append("description", descri);
+    formData.append("propertyType", propertyType ?? "");
+    formData.append("unit", unit.toString());
+    formData.append("price", rent.toString());
+    formData.append("location", location);
+    formData.append("amenities", JSON.stringify(facilities));
+    formData.append("youtubeVideo", youtubeVideo);
 
         {/* Lower Content Main Wrapper (Parent) */}
         <div className='w-full flex flex-col gap-10 lg:flex-row'>
@@ -220,234 +221,84 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       ))}
     </div>
 
-              {/* Lower Div  */}
-              <div className='p-6 bg-[#F9FAFB] rounded-2xl flex flex-col gap-1 lg:flex-row lg:gap-4 lg:items-center '>
-                <div className=''>
-                <p className='font-semibold text-lg'>How many units?</p>
-                <span className='text-gray-600 text-[12px]'>Total numbers of rooms / units available</span>
-                </div>
-                {/* Buttons  */}
-                <div className='border border-black/10 flex items-center rounded-xl w-fit mt-2 bg-white overflow-hidden'>
-                    <button className='flex h-10 w-10 items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-200 transition-colors overflow-hidden'>-</button>
-                    <input className='h-10 w-16 border-x border-gray-200 bg-transparent text-center text-sm font-semibold text-gray-900 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none' placeholder='1'/>
-                    <button className='flex h-10 w-10 items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-200 transition-colors overflow-hidden'>+</button>
-                </div> 
-              </div>
+    const response = await fetch("/api/properties", {
+      method: "POST",
 
-            </div>
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    console.log("Property created:", data);
+
+  } catch (error) {
+    console.error("Failed to create property:", error);
+  }
+};
+
+  return (
+    <div className="min-h-screen bg-white">
+      <NavbarForPage />
+
+      <main className="max-w-345 mx-auto px-4 sm:px-8 md:px-12 py-8 flex flex-col gap-8">
+        <FirstContainer />
+
+        <div className="w-full flex flex-col gap-10 lg:flex-row">
+          <Sidebar handleSubmit={handleSubmit} />
+
+          <div className="flex flex-col gap-6">
+            <SecondContainer
+              propertyType={propertyType}
+              setPropertyType={setPropertyType}
+              unit={unit}
+              setUnit={setUnit}
+            />
+
+            <ThirdContainer
+              title={title}
+              setTitle={setTitle}
+              descri={descri}
+              setDescri={setDescri}
+            />
+
+            <FourthContainer
+              location={location}
+              setLocation={setLocation}
+            />
+
+            <RentContainer
+              rent={rent}
+              setRent={setRent}
+              phone={phone}
+              setPhone={setPhone}
+            />
+
+            <FifthContainer
+              facilities={facilities}
+              setFacilities={setFacilities}
+            />
+
+            <SixthContainer
+              images={images}
+              setImages={setImages}
+              youtubeVideo={youtubeVideo}
+              setYoutubeVideo={setYoutubeVideo}
+            />
           </div>
-
-          <div className='border border-black/10 p-6 rounded-2xl'>
-            <div className='flex flex-col gap-4'>
-             <div className='flex gap-3'>
-                    <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>2</span>
-                    <div className='flex flex-col gap-1'>
-              <h3 className='font-semibold text-lg'>Title & Description</h3>
-              <p className='text-gray-600 text-sm'>Make your listing stand out with a clear headline and details</p>
-                    </div>
-                </div>
-
-                <div className='flex flex-col gap-2'>
-                    <p className='flex text-sm items-center gap-1 font-semibold'>Title <span className='text-red-500'>*</span></p>
-             <input type="text" placeholder='Search here...' className='py-2 px-3 rounded-xl border border-gray-300 w-full text-sm'/>
-                </div>
-                  
-                  {/* Desciption Container  */}
-                 <div className='flex flex-col gap-2'>
-                     <p className='flex items-center gap-1 font-semibold text-sm'>Description <span className='text-red-500'>*</span></p>
-                <JoditEditor/>
-                <p className='text-[12px] text-gray-600'>Add details like room size, furniture, floor, surroundings and who it suits best.</p>
-                </div>
-            </div>
-          </div>
-
-
-          <div className='border border-black/10 p-6 rounded-2xl'>
-            <div className='flex flex-col gap-8'>
-             <div className='flex gap-3'>
-                    <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>3</span>
-                    <div className='flex flex-col gap-1'>
-              <h3 className='font-semibold text-lg'>Location</h3>
-              <p className='text-gray-600 text-sm'>Search and select the exact address of your property</p>
-                    </div>
-                </div>
-
-             <div className='flex gap-2 items-center border border-gray-300 text-gray-500 text-sm rounded-xl py-2 px-3 w-full'>
-                <CiLocationOn />
-                <input type="text" placeholder='Search here...' className='outline-none' />
-             </div>
-            </div>
-          </div>
-
-
-          <div className='border border-black/10 p-6 rounded-2xl'>
-            <div className='flex flex-col gap-4'>
-              <div className='flex gap-3'>
-                    <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>4</span>
-                    <div className='flex flex-col gap-1'>
-              <h3 className='font-semibold text-lg'>Rent & Contact</h3>
-              <p className='text-gray-600 text-sm'>Set your monthly rent and the number tenants should call</p>
-                    </div>
-                </div>
-
-
-              <div className='flex flex-col gap-3 lg:flex-row lg:items-center'>
-
-            
-                 <div className='flex flex-col gap-2 w-full'>
-                    <p className='flex text-sm items-center gap-1 font-semibold'>Mobile Number <span className='text-red-500'>*</span></p>
-              <div className='flex gap-2 items-center border border-gray-300 text-gray-500 text-sm rounded-xl py-2 px-3 w-full justify-between'>
-                <div className='flex items-center gap-3'>
-                    <span className='text-gray-500'>+977</span>
-                <input type="text" placeholder='98XXXXXXXX' className='outline-none text-gray-600' />
-                </div>
-                <div>
-                    <FaPhoneAlt />
-                </div>
-             </div>
-                </div>
-
-                 <div className='flex flex-col gap-2 w-full'>
-                    <p className='flex text-sm items-center gap-1 font-semibold'>Monthly Rent <span className='text-red-500'>*</span></p>
-              <div className='flex gap-2 items-center border border-gray-300 text-gray-500 text-sm rounded-xl py-2 px-3 w-full justify-between'>
-                <div className='flex items-center gap-3'>
-                    <span className='text-gray-500 text-lg'>रु</span>
-                <input type="text" placeholder='Enter rent amount' className='outline-none text-gray-600' />
-                </div>
-                <div>
-                    <BsCash />
-                </div>
-             </div>
-                </div>
-                  </div>
-            </div>
-          </div>
-
-
-          {/* Facilities And Amenities  */}
-          <div className='border border-black/10 p-6 rounded-2xl'>
-            <div className='flex flex-col gap-8'>
-             <div className='flex gap-3'>
-                    <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>5</span>
-                    <div className='flex flex-col gap-1'>
-              <h3 className='font-semibold text-lg'>Facilities & Amenities</h3>
-              <p className='text-gray-600 text-sm'>Select everything your property offers</p>
-                    </div>
-                </div>
-
-            {/* Buttons Div  */}
-                <div className='flex flex-wrap gap-3'>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <CiWifiOn size={16}/> WIFI </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <CiDroplet  size={16}/> WATER </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <CiDeliveryTruck  size={16}/> PARKING </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <IoMdBus   size={16}/> BUS STOP </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <BsCupHot    size={16}/> MODULAR KITCHEN </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <FaHouse size={16}/> ATTACHED BATHROOM </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <MdOutlineShower  size={16}/> SHOWER  </button>
-                  <button className='flex items-center justify-center gap-1.5 border border-gray-300 rounded-3xl py-2 px-4 text-[12px] cursor-pointer hover:bg-gray-100 hover:border-red-300 transition-all'> <MdChair   size={16}/> Furniture  </button>
-
-                </div>
-            </div>
-          </div>
-
-
-          <div className='border border-black/10 p-6 rounded-2xl' onClick={handleContainerClick}>
-          <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        accept="image/*"
-        multiple
-        className="hidden"
-      />
-            <div className='flex flex-col gap-6 pb-8 border-b border-black/5'>
-              <div className='flex gap-3'>
-                    <span className='h-10 w-10 shrink-0 bg-[#F84F75] text-white flex items-center justify-center rounded-full'>6</span>
-                    <div className='flex flex-col gap-1'>
-              <h3 className='font-semibold text-lg'>Photos & Videos</h3>
-              <p className='text-gray-600 text-sm'>High-quality photos attract more tenants. The first image becomes the cover photo.</p>
-                    </div>
-                </div>
-                     <div className='flex flex-col gap-2'>
-                        <div className='flex justify-between'>
-                    <p className='flex items-center gap-1 font-semibold'> Property Images <span className='text-red-500'>*</span></p>
-                    <span className=' text-gray-600 text-sm'>0/5</span>
-                        </div>
-             <p className='text-gray-600 text-sm'>Upload high-quality images to attract more tenants. First image will be the cover photo.</p>
-                </div>
-
-                {/* Upload Section  */}
-                <div className='border-2 border-dashed border-gray-300 p-6 flex items-center justify-center bg-[#F6F7F8] rounded-2xl'>
-                    <div className='flex flex-col gap-3 items-center'>
-                       <span className='h-12 w-12 rounded-full bg-white text-red-500 shrink-0 flex items-center justify-center cursor-pointer'> <GoUpload size={25} className=''/> </span>
-                       <div className='flex flex-col gap-1'>
-                       <h3 className='font-semibold text-lg text-[16px]'>Click to upload property images</h3>
-                       <span className='text-center text-gray-600 text-[12px]'>or drag and drop your images here</span>
-                       </div>
-                    </div>
-                </div>
-
-                    {/* Image Guideliens  */}
-                      <div className='border-dotted p-6 bg-[#EFF4FF] rounded-2xl  '>
-                   <div className='flex flex-col gap-3 text-blue-500'>
-                    <div className='flex items-center gap-2'>
-                  <CiImageOn size={18}/>
-                  <p className='font-semibold text-[15px]'>Image Guidelines</p>
-                    </div>
-                  {/* Points  */}
-                  <div className='flex flex-col gap-1 ml-6'>
-
-                  <div className='flex items-center gap-1 text-[12px]'>
-                   <span className='h-2 w-2 shrink-0 rounded-full border'></span>
-                   <p>Formats: JPG, PNG, WebP</p>
-                  </div>
-
-                   <div className='flex items-center gap-1 text-[12px]'>
-                   <span className='h-2 w-2 shrink-0 rounded-full border'></span>
-                   <p>Max size: 5MB per image</p>
-                  </div>
-
-                   <div className='flex items-center gap-1 text-[12px]'>
-                   <span className='h-2 w-2 shrink-0 rounded-full border'></span>
-                   <p>Upload: 1-5 images</p>
-                  </div>
-
-                   <div className='flex items-center gap-1 text-[12px]'>
-                   <span className='h-2 w-2 shrink-0 rounded-full border'></span>
-                   <p>First image = Cover photo</p>
-                  </div>
-                  </div>
-
-                  
-                   </div>
-                </div>
-
-
-                {/* Yt Link COntainer  */}
-                <div className='flex flex-col gap-2'>
-                    <h3 className='font-semibold text-semibold'>YouTube Video Link <span className='text-gray-600 font-normal'>(optional)</span></h3>
-                    <input type="text" placeholder='Enter your link here...' className='outline-none text-gray-600 py-1.5 px-4 border border-black/10 rounded-xl w-full' />
-                    <p className='text-gray-500 text-[12px]'>Add a video walkthrough to build trust. Paste a YouTube link (e.g. https://youtu.be/XXXXXXXXXXX) or just the video ID.</p>
-                </div>
-            </div>
-          </div>
-
-                 {/* Review COntainer  */}
-                 {/* <div className='border border-black/10 rounded-2xl flex flex-col gap-5'>
-            
-          </div>    */}
-
-       
-
-
-
-
-        </div>
         </div>
       </main>
-        <Footer/>
-    </div>
-  )
-}
 
-export default RoomDescription
+      <Footer />
+    </div>
+  );
+};
+
+export default RoomDescription;

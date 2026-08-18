@@ -20,18 +20,23 @@ export interface IProperty extends Document {
 
   listingType: "RENT" | "SALE";
 
+  // Number of rooms/units available for this listing
+  units: number;
+
+  // Monthly rent for RENT listings or sale price for SALE listings
   price: number;
 
   bedrooms?: number;
   bathrooms?: number;
 
+  // Cloudinary image URLs
   images: string[];
 
-  city: string;
-  area: string;
-  address: string;
-
+  location: string;
   amenities: string[];
+
+  // Optional YouTube walkthrough link
+  youtubeVideo?: string;
 
   status: "AVAILABLE" | "RENTED" | "SOLD";
 
@@ -51,6 +56,7 @@ const PropertySchema = new Schema<IProperty>(
       type: String,
       required: true,
       trim: true,
+      minlength: 10,
     },
 
     description: {
@@ -81,6 +87,12 @@ const PropertySchema = new Schema<IProperty>(
       required: true,
     },
 
+    units: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+
     price: {
       type: Number,
       required: true,
@@ -102,19 +114,7 @@ const PropertySchema = new Schema<IProperty>(
       default: [],
     },
 
-    city: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    area: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    address: {
+    location: {
       type: String,
       required: true,
       trim: true,
@@ -123,6 +123,11 @@ const PropertySchema = new Schema<IProperty>(
     amenities: {
       type: [String],
       default: [],
+    },
+
+    youtubeVideo: {
+      type: String,
+      trim: true,
     },
 
     status: {

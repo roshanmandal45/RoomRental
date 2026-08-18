@@ -197,10 +197,13 @@ const propertiesData = [
 
     amenities: [
       "Parking",
-      "Garden",
+      "WiFi",
       "Kitchen",
       "Water Supply",
       "Balcony",
+      "Security Guard",
+      "Furnished",
+      "Air Conditioner",
     ],
 
     status: "AVAILABLE",

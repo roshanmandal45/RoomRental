@@ -1,15 +1,21 @@
 "use client";
 
-import React, { useState, useRef, useMemo } from "react";
+import React, { useRef, useMemo } from "react";
 import dynamic from "next/dynamic";
+
+interface JoditEditorProps {
+  setContent: React.Dispatch<React.SetStateAction<string>>;
+}
 
 const Jodit = dynamic(() => import("jodit-react"), {
   ssr: false,
 });
 
-export default function JoditEditor() {
+export default function JoditEditor({
+  setContent,
+}: JoditEditorProps) {
+
   const editor = useRef(null);
-  const [content, setContent] = useState("");
 
   const config = useMemo(
     () => ({
@@ -43,7 +49,6 @@ export default function JoditEditor() {
   return (
     <Jodit
       ref={editor}
-      value={content}
       config={config}
       onBlur={(newContent) => setContent(newContent)}
     />
