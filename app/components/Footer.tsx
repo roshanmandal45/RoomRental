@@ -128,16 +128,28 @@ export default function Footer() {
             <ul className="space-y-2 text-gray-600 text-lg">
 
               <li className="hover:text-red-600 cursor-pointer">
-                Privacy Policy
-              </li>
+<Link
+                  href="/terms"
+                  className="hover:text-red-600 cursor-pointer"
+                >
+                  Terms and Conditions
+                </Link>                  </li>
 
               <li className="hover:text-red-600 cursor-pointer">
-                Terms and Conditions
-              </li>
+<Link
+                  href="/help"
+                  className="hover:text-red-600 cursor-pointer"
+                >
+                  Helps and Support
+                </Link>                  </li>
 
               <li className="hover:text-red-600 cursor-pointer">
-                Help and Support
-              </li>
+<Link
+                  href="/policy"
+                  className="hover:text-red-600 cursor-pointer"
+                >
+                  Private Policy
+                </Link>                  </li>
 
             </ul>
           </div>
