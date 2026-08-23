@@ -4,37 +4,79 @@ import User from "@/app/models/User";
 import { adminAuth } from "@/app/lib/firebaseAdmin";
 import cloudinary from "@/app/lib/cloudinary";
 
+
 // GET Properties
-export async function GET(req:Request) {
+// GET Properties
+export async function GET(req: Request) {
   try {
     await dbConnect();
 
-   const { searchParams } = new URL(req.url)
-   const section = searchParams.get("section")
-   const place = searchParams.get("place");
+    const { searchParams } = new URL(req.url);
 
-   //Cheapest Rooms
-   if(section === "cheapest"){
-    const properties = await Property.find({
-      status: "AVAILABLE",
-      listingType: "RENT"
-    })
-    .sort({ price: 1 }).limit(8)
-    return Response.json(properties)
-   }
+    const section = searchParams.get("section");
+    const place = searchParams.get("place");
+    const search = searchParams.get("search")?.trim();
 
-   //Latest Rooms
+    // 🔎 SEARCH PROPERTIES
+    // Example:
+    // /api/properties?search=room
+    // /api/properties?search=kathmandu
+    // /api/properties?search=apartment
+    if (search) {
+      const regex = new RegExp(
+        search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+        "i"
+      );
+
+      const properties = await Property.find({
+        status: "AVAILABLE",
+        listingType: "RENT",
+
+        $or: [
+          { title: regex },
+          { description: regex },
+          { propertyType: regex },
+          { location: regex },
+          { amenities: regex },
+        ],
+      })
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .lean();
+
+      return Response.json(
+        {
+          success: true,
+          properties,
+        },
+        { status: 200 }
+      );
+    }
+
+    // Cheapest Rooms
+    if (section === "cheapest") {
+      const properties = await Property.find({
+        status: "AVAILABLE",
+        listingType: "RENT",
+      })
+        .sort({ price: 1 })
+        .limit(8);
+
+      return Response.json(properties);
+    }
+
+    // Latest Rooms
     if (section === "latest") {
-    const properties = await Property.find({
-      status: "AVAILABLE",
-    })
-      .sort({ createdAt: -1 })
-      .limit(8);
+      const properties = await Property.find({
+        status: "AVAILABLE",
+      })
+        .sort({ createdAt: -1 })
+        .limit(8);
 
-    return Response.json(properties);
-  }
+      return Response.json(properties);
+    }
 
-     //Random(for now) featured properties
+    // Random Featured Properties
     if (section === "featured") {
       const properties = await Property.aggregate([
         {
@@ -49,10 +91,11 @@ export async function GET(req:Request) {
           },
         },
       ]);
+
       return Response.json(properties);
     }
 
-      //Properties by place
+    // Properties by place
     if (section === "place" && place) {
       const properties = await Property.find({
         status: "AVAILABLE",
@@ -69,16 +112,18 @@ export async function GET(req:Request) {
     }
 
     return Response.json(
-      { message: "Invalid section or missing parameters" },
+      {
+        message: "Invalid section or missing parameters",
+      },
       { status: 400 }
     );
-
-  
   } catch (error) {
-    console.log(error);
+    console.error("Property GET error:", error);
 
     return Response.json(
-      { message: "Failed connecting database" },
+      {
+        message: "Failed connecting database",
+      },
       { status: 500 }
     );
   }

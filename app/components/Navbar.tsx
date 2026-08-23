@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/public/heroSecImages/logo.svg";
 import room from "@/public/CatImages/roomicon.webp";
-import BK from "@/public//CatImages/BK.webp";
-import BHK from "@/public//CatImages/BHK.webp";
+import BK from "@/public/CatImages/BK.webp";
+import BHK from "@/public/CatImages/BHK.webp";
 import Hostel from "@/public/CatImages/hostel.webp";
 import Hotel from "@/public/CatImages/Hotel.webp";
 import Apartment from "@/public/CatImages/apartment.webp";
@@ -17,9 +17,15 @@ import Cottage from "@/public/CatImages/Cottage.webp";
 import { IoMenuOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { MdOutlineVerified } from "react-icons/md";
-import { FiPlus, FiChevronDown, FiUser, FiLogOut } from "react-icons/fi";
+import {
+  FiPlus,
+  FiChevronDown,
+  FiUser,
+  FiLogOut,
+  FiMapPin,
+} from "react-icons/fi";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
 import { signOut } from "firebase/auth";
@@ -38,6 +44,15 @@ const categories = [
   { src: Office, label: "OFFICE SPACE", link: "/exploreproperty" },
 ];
 
+interface Property {
+  _id: string;
+  title: string;
+  location?: string;
+  propertyType?: string;
+  price?: number;
+  images?: string[];
+}
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [btnOpen, setBtnOpen] = useState(false);
@@ -49,11 +64,30 @@ const Navbar = () => {
 
   const [profileOpen, setProfileOpen] = useState(false);
 
+  // ==========================================
+  // SEARCH STATE
+  // ==========================================
+
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState<Property[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  // ==========================================
+  // LOGOUT
+  // ==========================================
+
   const handleLogout = async () => {
     await signOut(auth);
     setProfileOpen(false);
     router.push("/login");
   };
+
+  // ==========================================
+  // SCROLL
+  // ==========================================
 
   useEffect(() => {
     const handleScroll = () => {
@@ -65,13 +99,324 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // ==========================================
+  // SEARCH API
+  // ==========================================
+
+  useEffect(() => {
+    if (!search.trim()) {
+      setSearchResults([]);
+      setShowResults(false);
+      setSearchLoading(false);
+      return;
+    }
+
+    setShowResults(true);
+    setSearchLoading(true);
+
+    const timer = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          `/api/properties?search=${encodeURIComponent(search.trim())}`
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Search failed");
+        }
+
+        setSearchResults(data.properties || []);
+      } catch (error) {
+        console.error("Property search error:", error);
+        setSearchResults([]);
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // ==========================================
+  // CLOSE SEARCH WHEN CLICKING OUTSIDE
+  // ==========================================
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // ==========================================
+  // SEARCH SUBMIT
+  // ==========================================
+
+  const handleSearch = () => {
+    const value = search.trim();
+
+    if (!value) {
+      router.push("/exploreproperty");
+      return;
+    }
+
+    setShowResults(false);
+
+    router.push(
+      `/exploreproperty?search=${encodeURIComponent(value)}`
+    );
+  };
+
+  // ==========================================
+  // SEARCH DROPDOWN
+  // ==========================================
+
+  const SearchDropdown = () => {
+    if (!showResults || !search.trim()) {
+      return null;
+    }
+
+    return (
+      <div
+        className="
+          absolute
+          top-[calc(100%+10px)]
+          left-0
+          right-0
+          bg-white
+          border border-black/[0.07]
+          rounded-2xl
+          shadow-[0_20px_60px_rgba(0,0,0,0.14)]
+          overflow-hidden
+          z-[100]
+        "
+      >
+        {/* Loading */}
+        {searchLoading ? (
+          <div className="p-5">
+            <div className="flex items-center gap-3">
+              <div className="h-5 w-5 rounded-full border-2 border-neutral-200 border-t-red-500 animate-spin" />
+
+              <p className="text-sm text-neutral-500">
+                Searching properties...
+              </p>
+            </div>
+          </div>
+        ) : searchResults.length === 0 ? (
+          /* No results */
+          <div className="p-6">
+            <div className="h-11 w-11 rounded-xl bg-neutral-100 flex items-center justify-center mb-3">
+              <CiSearch
+                size={22}
+                className="text-neutral-400"
+              />
+            </div>
+
+            <p className="font-semibold text-neutral-900">
+              No properties found
+            </p>
+
+            <p className="text-sm text-neutral-500 mt-1 leading-5">
+              Try searching for a room, apartment, hostel,
+              Kathmandu or another location.
+            </p>
+          </div>
+        ) : (
+          /* Results */
+          <>
+            <div className="px-4 pt-4 pb-2">
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-400">
+                Properties
+              </p>
+
+              <p className="text-xs text-neutral-400 mt-1">
+                Showing results for &quot;{search}&quot;
+              </p>
+            </div>
+
+            <div className="max-h-[390px] overflow-y-auto">
+              {searchResults.map((property) => (
+                <Link
+                  key={property._id}
+                  href={`/property/${property._id}`}
+                  onClick={() => {
+                    setShowResults(false);
+                    setSearch("");
+                  }}
+                  className="
+                    flex
+                    items-center
+                    gap-3
+                    px-4
+                    py-3
+                    hover:bg-neutral-50
+                    transition-colors
+                    group
+                  "
+                >
+                  {/* Property image */}
+                  <div
+                    className="
+                      h-14
+                      w-14
+                      shrink-0
+                      rounded-xl
+                      overflow-hidden
+                      bg-neutral-100
+                    "
+                  >
+                    {property.images &&
+                    property.images.length > 0 ? (
+                      <Image
+                        src={property.images[0]}
+                        alt={property.title}
+                        width={56}
+                        height={56}
+                        className="
+                          h-full
+                          w-full
+                          object-cover
+                          group-hover:scale-105
+                          transition-transform
+                          duration-300
+                        "
+                      />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center">
+                        <FiMapPin
+                          size={18}
+                          className="text-neutral-300"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Property information */}
+                  <div className="flex-1 min-w-0">
+                    <p
+                      className="
+                        text-sm
+                        font-semibold
+                        text-neutral-900
+                        truncate
+                      "
+                    >
+                      {property.title}
+                    </p>
+
+                    <div className="flex items-center gap-1 mt-1">
+                      <FiMapPin
+                        size={12}
+                        className="text-neutral-400 shrink-0"
+                      />
+
+                      <p className="text-xs text-neutral-500 truncate">
+                        {property.location || "Nepal"}
+                      </p>
+                    </div>
+
+                    {property.propertyType && (
+                      <span
+                        className="
+                          inline-block
+                          mt-1.5
+                          text-[9px]
+                          font-bold
+                          uppercase
+                          tracking-wider
+                          text-red-500
+                          bg-red-50
+                          px-2
+                          py-0.5
+                          rounded-md
+                        "
+                      >
+                        {property.propertyType}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Price */}
+                  <div className="shrink-0 text-right">
+                    {typeof property.price === "number" &&
+                    property.price > 0 ? (
+                      <>
+                        <p className="text-sm font-bold text-neutral-900">
+                          Rs.{" "}
+                          {property.price.toLocaleString()}
+                        </p>
+
+                        <p className="text-[10px] text-neutral-400 mt-0.5">
+                          / month
+                        </p>
+                      </>
+                    ) : (
+                      <span className="text-xs text-neutral-400">
+                        View
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* View all */}
+            <Link
+              href={`/exploreproperty?search=${encodeURIComponent(
+                search
+              )}`}
+              onClick={() => {
+                setShowResults(false);
+              }}
+              className="
+                block
+                border-t
+                border-black/[0.06]
+                px-4
+                py-3.5
+                text-center
+                text-sm
+                font-semibold
+                text-red-500
+                hover:bg-red-50
+                transition-colors
+              "
+            >
+              View all properties →
+            </Link>
+          </>
+        )}
+      </div>
+    );
+  };
+
   return (
     <nav
-      className={`sticky top-0 z-50 w-full text-black transition-all duration-300 ${
-        scrolled
-          ? "bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] border-b border-black/[0.05]"
-          : "bg-white/95 backdrop-blur-xl"
-      }`}
+      className={`
+        sticky
+        top-0
+        z-50
+        w-full
+        text-black
+        transition-all
+        duration-300
+        ${
+          scrolled
+            ? "bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] border-b border-black/[0.05]"
+            : "bg-white/95 backdrop-blur-xl"
+        }
+      `}
     >
       {/* ================================================= */}
       {/* TOP NAVBAR */}
@@ -79,47 +424,91 @@ const Navbar = () => {
 
       <div className="max-w-[1450px] mx-auto px-4 sm:px-8 lg:px-10">
         <div className="h-[76px] flex items-center justify-between gap-5">
-          
+
           {/* LOGO */}
           <Link
-  href="/"
-  className="flex items-center tracking-tight"
->
-  <span className="text-2xl sm:text-3xl font-black text-black">
-    ROOM
-  </span>
-  <span className="text-2xl sm:text-3xl font-black text-red-500">
-    IFY
-  </span>
-</Link>
+            href="/"
+            className="flex items-center tracking-tight shrink-0"
+          >
+            <span className="text-2xl sm:text-3xl font-black text-black">
+              ROOM
+            </span>
+
+            <span className="text-2xl sm:text-3xl font-black text-red-500">
+              IFY
+            </span>
+          </Link>
+
           {/* DESKTOP SEARCH */}
-          <div className="hidden md:flex flex-1 max-w-[560px]">
+          <div
+            ref={searchRef}
+            className="hidden md:flex flex-1 max-w-[560px] relative"
+          >
             <div
               className="
                 group
                 w-full
                 h-[50px]
-                flex items-center
+                flex
+                items-center
                 bg-white
                 border border-black/[0.08]
                 rounded-2xl
                 shadow-[0_4px_20px_rgba(0,0,0,0.05)]
-                transition-all duration-300
+                transition-all
+                duration-300
                 hover:shadow-[0_8px_28px_rgba(0,0,0,0.08)]
                 focus-within:border-black/20
                 focus-within:shadow-[0_8px_28px_rgba(0,0,0,0.09)]
               "
             >
               <div className="flex items-center gap-3 flex-1 pl-4">
-                <div className="h-8 w-8 rounded-xl bg-neutral-100 flex items-center justify-center shrink-0 group-focus-within:bg-red-50 transition-colors">
+
+                <div
+                  className="
+                    h-8
+                    w-8
+                    rounded-xl
+                    bg-neutral-100
+                    flex
+                    items-center
+                    justify-center
+                    shrink-0
+                    group-focus-within:bg-red-50
+                    transition-colors
+                  "
+                >
                   <CiSearch
                     size={21}
-                    className="text-neutral-500 group-focus-within:text-red-500 transition-colors"
+                    className="
+                      text-neutral-500
+                      group-focus-within:text-red-500
+                      transition-colors
+                    "
                   />
                 </div>
 
                 <input
                   type="text"
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setShowResults(true);
+                  }}
+                  onFocus={() => {
+                    if (search.trim()) {
+                      setShowResults(true);
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSearch();
+                    }
+
+                    if (e.key === "Escape") {
+                      setShowResults(false);
+                    }
+                  }}
                   placeholder="Search rooms, flats, apartments..."
                   className="
                     w-full
@@ -134,6 +523,7 @@ const Navbar = () => {
               </div>
 
               <button
+                onClick={handleSearch}
                 className="
                   mr-1.5
                   h-10
@@ -155,11 +545,13 @@ const Navbar = () => {
                 <CiSearch size={19} />
               </button>
             </div>
+
+            <SearchDropdown />
           </div>
 
           {/* DESKTOP ACTIONS */}
           <div className="hidden lg:flex items-center gap-2.5 shrink-0">
-            
+
             {/* COUNTRY */}
             <div className="relative">
               <button
@@ -183,7 +575,9 @@ const Navbar = () => {
                 "
               >
                 <span className="text-base">
-                  {selectedButton === "Nepal" ? "🇳🇵" : "🇺🇸"}
+                  {selectedButton === "Nepal"
+                    ? "🇳🇵"
+                    : "🇺🇸"}
                 </span>
 
                 <span>
@@ -366,7 +760,9 @@ const Navbar = () => {
               {user ? (
                 <>
                   <button
-                    onClick={() => setProfileOpen(!profileOpen)}
+                    onClick={() =>
+                      setProfileOpen(!profileOpen)
+                    }
                     className="
                       h-11
                       w-11
@@ -393,7 +789,9 @@ const Navbar = () => {
                       />
                     ) : (
                       <span className="bg-black text-white flex items-center justify-center h-full w-full font-bold">
-                        {user.email?.charAt(0).toUpperCase() || "U"}
+                        {user.email
+                          ?.charAt(0)
+                          .toUpperCase() || "U"}
                       </span>
                     )}
                   </button>
@@ -413,7 +811,6 @@ const Navbar = () => {
                         z-50
                       "
                     >
-                      {/* Profile info */}
                       <div className="p-3 rounded-xl bg-neutral-50 flex items-center gap-3">
                         {user.photoURL ? (
                           <Image
@@ -442,7 +839,6 @@ const Navbar = () => {
                         </div>
                       </div>
 
-                      {/* Logout */}
                       <button
                         onClick={handleLogout}
                         className="
@@ -520,8 +916,14 @@ const Navbar = () => {
           </button>
         </div>
 
+        {/* ================================================= */}
         {/* MOBILE SEARCH */}
-        <div className="md:hidden pb-4">
+        {/* ================================================= */}
+
+        <div
+          ref={searchRef}
+          className="md:hidden pb-4 relative"
+        >
           <div
             className="
               h-[48px]
@@ -541,6 +943,25 @@ const Navbar = () => {
 
             <input
               type="text"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setShowResults(true);
+              }}
+              onFocus={() => {
+                if (search.trim()) {
+                  setShowResults(true);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+
+                if (e.key === "Escape") {
+                  setShowResults(false);
+                }
+              }}
               placeholder="Search places, rooms..."
               className="
                 flex-1
@@ -553,6 +974,7 @@ const Navbar = () => {
             />
 
             <button
+              onClick={handleSearch}
               className="
                 h-9
                 w-9
@@ -568,6 +990,8 @@ const Navbar = () => {
               <CiSearch size={17} />
             </button>
           </div>
+
+          <SearchDropdown />
         </div>
 
         {/* ================================================= */}
@@ -649,7 +1073,6 @@ const Navbar = () => {
                   {cat.label}
                 </p>
 
-                {/* Hover indicator */}
                 <span
                   className="
                     absolute
@@ -776,7 +1199,9 @@ const Navbar = () => {
             {user ? (
               <div>
                 <button
-                  onClick={() => setProfileOpen(!profileOpen)}
+                  onClick={() =>
+                    setProfileOpen(!profileOpen)
+                  }
                   className="
                     w-full
                     flex
@@ -799,7 +1224,8 @@ const Navbar = () => {
                     />
                   ) : (
                     <span className="bg-black text-white flex items-center justify-center h-10 w-10 rounded-xl font-bold text-sm">
-                      {user.email?.charAt(0).toUpperCase() || "U"}
+                      {user.email?.charAt(0).toUpperCase() ||
+                        "U"}
                     </span>
                   )}
 
@@ -871,7 +1297,8 @@ const Navbar = () => {
           {/* Mobile Links */}
           <div className="rounded-xl border border-black/[0.06] overflow-hidden">
             <Link
-              href="#"
+              href="/aboutus"
+              onClick={() => setIsOpen(false)}
               className="block px-4 py-3.5 text-sm font-medium hover:bg-neutral-50 border-b border-black/[0.05]"
             >
               About Us
