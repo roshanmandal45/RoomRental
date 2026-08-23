@@ -42,7 +42,7 @@ const properties = [
     type: "ROOM",
     title: "Single Room",
     location: "Kathmandu",
-    image: "/FeaturedImages/Img2.avif",
+    image: "/FeaturedImages/Img2.webp",
     price: "Rs. 12,000",
   },
   {
@@ -50,7 +50,7 @@ const properties = [
     type: "OFFICE",
     title: "Office Space",
     location: "Kathmandu",
-    image: "/FeaturedImages/Img3.avif",
+    image: "/FeaturedImages/Img3.webp",
     price: "Rs. 30,000",
   },
   {
@@ -58,7 +58,7 @@ const properties = [
     type: "HOSTEL",
     title: "Student Hostel",
     location: "Kathmandu",
-    image: "/FeaturedImages/Img4.avif",
+    image: "/FeaturedImages/Img4.webp",
     price: "Rs. 10,000",
   },
   {
@@ -66,7 +66,7 @@ const properties = [
     type: "HOTEL",
     title: "Luxury Hotel",
     location: "Kathmandu",
-    image: "/FeaturedImages/Img5.avif",
+    image: "/FeaturedImages/Img5.webp",
     price: "Rs. 35,000",
   },
   {
@@ -74,7 +74,7 @@ const properties = [
     type: "FLAT",
     title: "Rental Flat",
     location: "Kathmandu",
-    image: "/FeaturedImages/Img6.avif",
+    image: "/FeaturedImages/Img6.webp",
     price: "Rs. 22,000",
   },
 ];
