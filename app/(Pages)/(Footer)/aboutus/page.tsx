@@ -5,24 +5,19 @@ import Image from "next/image";
 import NavbarForPage from "@/app/components/NavbarForPage";
 import Footer from "@/app/components/Footer";
 
-
 const AboutPage = () => {
-  
   return (
     <main className="min-h-screen bg-white text-[#172033]">
-<NavbarForPage/>
-    
+      <NavbarForPage />
+
       <section className="w-full bg-white">
         <div className="max-w-[1180px] mx-auto px-6 sm:px-8 lg:px-10">
-
           <div className="min-h-[650px] flex items-center">
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
 
               {/* LEFT CONTENT */}
 
               <div className="flex flex-col justify-center">
-
                 <h1 className="text-[42px] sm:text-[48px] lg:text-[52px] xl:text-[56px] leading-[1.02] font-extrabold tracking-[-1.5px] text-[#182033]">
                   Nepal&apos;s #1 Property Rental
                   <br />
@@ -47,40 +42,31 @@ const AboutPage = () => {
                   Professional property rental management services
                   for landlords and tenants.
                 </p>
-
               </div>
 
               {/* RIGHT IMAGE */}
 
               <div className="relative w-full h-[330px] sm:h-[390px] lg:h-[430px]">
-
                 <Image
-                  src={'/images/aboutus.svg'}
+                  src={"/images/aboutus.svg"}
                   alt="Property rental illustration"
                   fill
                   priority
                   className="object-contain"
                 />
-
               </div>
 
             </div>
-
           </div>
-
         </div>
       </section>
 
-
-
       <section className="w-full bg-white pb-20">
-
         <div className="max-w-[1000px] mx-auto px-6 sm:px-8">
 
           <h2 className="text-center text-[34px] sm:text-[38px] lg:text-[40px] font-extrabold tracking-[-0.8px] text-[#172033]">
             Leading Property Rental Platform in Nepal Since 2020
           </h2>
-
 
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 
@@ -90,7 +76,7 @@ const AboutPage = () => {
 
               <p>
                 <strong className="font-bold">
-                  Room Sewa
+                  Roomify
                 </strong>{" "}
                 is Nepal&apos;s premier{" "}
                 <em>property rental management platform</em>{" "}
@@ -107,12 +93,11 @@ const AboutPage = () => {
 
               <p className="mt-5">
                 Whether you are searching for a room, apartment,
-                house, flat or commercial property, Room Sewa helps
+                house, flat or commercial property, Roomify helps
                 you discover the right place for your needs.
               </p>
 
             </div>
-
 
             {/* RIGHT CARD */}
 
@@ -130,7 +115,6 @@ const AboutPage = () => {
                   </p>
                 </div>
 
-
                 <div className="bg-white rounded-2xl p-5 shadow-sm">
                   <p className="text-3xl font-extrabold text-[#E51E4F]">
                     10K+
@@ -141,7 +125,6 @@ const AboutPage = () => {
                   </p>
                 </div>
 
-
                 <div className="bg-white rounded-2xl p-5 shadow-sm">
                   <p className="text-3xl font-extrabold text-[#E51E4F]">
                     50K+
@@ -151,7 +134,6 @@ const AboutPage = () => {
                     Users
                   </p>
                 </div>
-
 
                 <div className="bg-white rounded-2xl p-5 shadow-sm">
                   <p className="text-3xl font-extrabold text-[#E51E4F]">
@@ -168,15 +150,10 @@ const AboutPage = () => {
             </div>
 
           </div>
-
         </div>
-
       </section>
 
-
-
       <section className="w-full bg-[#F9FAFB] py-20">
-
         <div className="max-w-[1100px] mx-auto px-6 sm:px-8">
 
           <div className="max-w-[750px] mx-auto text-center">
@@ -196,7 +173,6 @@ const AboutPage = () => {
             </p>
 
           </div>
-
 
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
 
@@ -219,7 +195,6 @@ const AboutPage = () => {
 
             </div>
 
-
             {/* CARD 2 */}
 
             <div className="bg-white rounded-3xl p-7 border border-gray-100">
@@ -238,7 +213,6 @@ const AboutPage = () => {
               </p>
 
             </div>
-
 
             {/* CARD 3 */}
 
@@ -260,15 +234,10 @@ const AboutPage = () => {
             </div>
 
           </div>
-
         </div>
-
       </section>
 
-
-
       <section className="w-full bg-white py-20">
-
         <div className="max-w-[1100px] mx-auto px-6 sm:px-8">
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
@@ -278,7 +247,7 @@ const AboutPage = () => {
             <div>
 
               <p className="text-sm font-bold uppercase tracking-widest text-[#D81B54]">
-                Why Room Sewa
+                Why Roomify
               </p>
 
               <h2 className="mt-3 text-[36px] sm:text-[42px] font-extrabold leading-tight text-[#172033]">
@@ -287,12 +256,11 @@ const AboutPage = () => {
 
               <p className="mt-5 text-gray-600 text-[17px] leading-7">
                 From searching for your first room to managing
-                multiple rental properties, Room Sewa is built to
+                multiple rental properties, Roomify is built to
                 make the entire property rental experience easier.
               </p>
 
             </div>
-
 
             {/* RIGHT */}
 
@@ -317,7 +285,6 @@ const AboutPage = () => {
 
               </div>
 
-
               <div className="flex gap-4 p-5 rounded-2xl bg-[#F9FAFB]">
 
                 <div className="h-10 w-10 shrink-0 rounded-full bg-[#FFE8EF] flex items-center justify-center text-[#D81B54] font-bold">
@@ -336,7 +303,6 @@ const AboutPage = () => {
                 </div>
 
               </div>
-
 
               <div className="flex gap-4 p-5 rounded-2xl bg-[#F9FAFB]">
 
@@ -362,11 +328,8 @@ const AboutPage = () => {
           </div>
 
         </div>
-
       </section>
 
-
-     
       <section className="px-6 sm:px-8 pb-20">
 
         <div className="max-w-[1100px] mx-auto rounded-[32px] overflow-hidden bg-gradient-to-r from-[#FF2865] via-[#D81B54] to-[#800C35]">
@@ -379,7 +342,7 @@ const AboutPage = () => {
 
             <p className="mt-4 max-w-[650px] mx-auto text-white/90">
               Discover rooms, flats, houses and apartments across
-              Nepal with Room Sewa.
+              Nepal with Roomify.
             </p>
 
             <button
@@ -394,7 +357,8 @@ const AboutPage = () => {
         </div>
 
       </section>
-<Footer/>
+
+      <Footer />
     </main>
   );
 };

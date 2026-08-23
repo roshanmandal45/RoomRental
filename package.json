@@ -10,10 +10,10 @@
     "seed": "tsx app/seed/seed.ts"
   },
   "dependencies": {
-    "cloudinary": "^2.10.0",
+    "cloudinary": "^2.10.1",
     "dotenv": "^17.4.2",
     "firebase": "^12.17.1",
-    "firebase-admin": "^14.2.0",
+    "firebase-admin": "^10.3.0",
     "jodit-react": "^5.4.70",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.28.0",
