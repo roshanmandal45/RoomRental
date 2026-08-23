@@ -85,7 +85,7 @@ const SecondContainer = ({propertyType, setPropertyType, unit, setUnit}:SecondCo
                      {/* Buttons  */}
                      <div className='border border-black/10 flex items-center rounded-xl w-fit mt-2 bg-white overflow-hidden'>
                        <button className='flex h-10 w-10 items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-200 transition-colors overflow-hidden' onClick={() => setUnit(prev => Math.max(1, prev - 1))}>-</button>
-                       <input className='h-10 w-16 border-x border-gray-200 bg-transparent text-center text-sm font-semibold text-gray-900 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none' placeholder='1' value={unit} />
+                       <input className='h-10 w-16 border-x border-gray-200 bg-transparent text-center text-sm font-semibold text-gray-900 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none' placeholder='1' value={unit} onChange={()=>console.log("hi")}/>
                        <button className='flex h-10 w-10 items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-200 transition-colors overflow-hidden' onClick={() => setUnit(prev => prev + 1)}>+</button>
                      </div>
                    </div>

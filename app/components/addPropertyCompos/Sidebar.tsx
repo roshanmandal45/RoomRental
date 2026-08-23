@@ -4,9 +4,10 @@ import { MdOutlineEmail } from 'react-icons/md'
 
 interface SidebarProps {
   handleSubmit: () => void; 
+  isPublishing: boolean
 }
 
-const Sidebar = ({handleSubmit}: SidebarProps) => {
+const Sidebar = ({handleSubmit, isPublishing}: SidebarProps) => {
   return (
     <div className='lg:order-2 lg:h-full lg:w-1/2 lg:sticky top-40 flex flex-col gap-5 order-2'>
 
@@ -73,7 +74,7 @@ const Sidebar = ({handleSubmit}: SidebarProps) => {
                   </div>
 
                 </div>
-                <button onClick={handleSubmit} className='text-white  bg-linear-to-r from-[#FF2865] via-[#D81B54] to-[#800C35] w-full rounded-xl flex items-center justify-center py-2 text-[15px]'>Publish Property</button>
+                <button onClick={handleSubmit} className='cursor-pointer text-white  bg-linear-to-r from-[#FF2865] via-[#D81B54] to-[#800C35] w-full rounded-xl flex items-center justify-center py-2 text-[15px]'>{isPublishing ? "Publishing Property..." : "Publish Property"}</button>
                 <div className='text-[12px] flex gap-1 items-center justify-center'>
                   <span className='text-gray-500 flex items-center gap-1'> <MdOutlineEmail size={14} /> Need help? </span>
                   <p className='text-red-500 font-semibold'>support@roomsewa.com.np</p>
