@@ -65,18 +65,17 @@ return (
       {/* 1. TOP ROW CONTAINER */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 py-3 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
         {/* Logo and Mobile Toggle Header */}
-        <div className="flex items-center justify-between lg:shrink-0">
-          <Link href={"/"}>
-            <Image src={Logo} alt="logo" width={130} height={35} priority />
-          </Link>
-          <span
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="border border-black/10 h-9 w-9 rounded-full flex items-center justify-center lg:hidden cursor-pointer"
-          >
-            <IoMenuOutline size={24} />
-          </span>
-        </div>
-
+       <Link
+  href="/"
+  className="flex items-center tracking-tight"
+>
+  <span className="text-2xl sm:text-3xl font-black text-black">
+    ROOM
+  </span>
+  <span className="text-2xl sm:text-3xl font-black text-red-500">
+    IFY
+  </span>
+</Link>
         {/* Search Bar */}
         <div className="w-full lg:max-w-xl">
           <div className="flex items-center justify-between border border-black/8 rounded-full p-2.5 shadow-sm bg-white">
