@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import img1 from "@/public/roomDescrImages/img1.webp"
 import Image from 'next/image'
 import { CiHeart, CiLocationOn, CiPhone, CiWifiOn } from 'react-icons/ci'
@@ -18,18 +18,97 @@ import Footer from '@/app/components/Footer'
 import NavbarForPage from '@/app/components/NavbarForPage'
 import { useAuth } from "@/app/context/AuthContext";
 
+interface Property {
+  _id: string;
+  title: string;
+  description: string;
+  propertyType: string;
+  listingType: string;
+  units: number;
+  price: number;
+  location: string;
+  images: string[];
+  amenities: string[];
+  youtubeVideo?: string;
+  status: string;
+
+  owner?: {
+    _id: string;
+    name?: string;
+    email?: string;
+    phone?: string;
+  };
+}
+
+interface RoomDescriptionProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
 
 const Map = dynamic(() => import('@/app/components/Leaflet'), {
   ssr: false,
   loading: () => <div className="w-full h-87.5 bg-neutral-100 animate-pulse rounded-xl flex items-center justify-center text-neutral-400">Loading Map...</div>
 })
 
-const RoomDescription = () => {
-  // FIXED: Defined the missing coordinate coordinates array
-  const sampleCoordinates: [number, number] = [28.6476, 77.0501]
-  const router = useRouter()
+const RoomDescription = ({params}: RoomDescriptionProps) => {
+
+  const [property, setProperty] = useState<Property | null>(null);
+const [propertyLoading, setPropertyLoading] = useState(true);
+const [propertyError, setPropertyError] = useState("");
+const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null)
+ const router = useRouter()
 
   const { user, loading } = useAuth();
+
+useEffect(() => {
+  const fetchProperty = async () => {
+    try {
+      const { id } = await params;
+
+      const response = await fetch(`/api/properties?id=${id}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch property");
+      }
+
+      const data = await response.json();
+
+      setProperty(data);
+    } catch (error) {
+      console.error("Room description error:", error);
+      setPropertyError("Failed to load property");
+    } finally {
+      setPropertyLoading(false);
+    }
+  };
+
+  fetchProperty();
+}, [params]);
+
+
+if (propertyLoading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-gray-500">Loading property...</p>
+    </div>
+  );
+}
+
+if (propertyError || !property) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-red-500">
+        {propertyError || "Property not found"}
+      </p>
+    </div>
+  );
+}
+
+  // FIXED: Defined the missing coordinate coordinates array
+  const sampleCoordinates: [number, number] = [28.6476, 77.0501]
+ 
   
     const handlePublish = () => {
       if (loading) return;
@@ -58,7 +137,7 @@ const RoomDescription = () => {
       },
 
       body: JSON.stringify({
-        amount: 9000,
+        amount: property.price ?? 9000,
         transactionUuid,
       }),
     });
@@ -97,7 +176,7 @@ const RoomDescription = () => {
   }
 };
 
-const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null)
+
 
 const toggleFaq = (index: number) => {
   setActiveFaqIndex(prevIndex => (prevIndex === index ? null : index))
@@ -117,9 +196,9 @@ const toggleFaq = (index: number) => {
       <main className='max-w-345 mx-auto px-4 sm:px-8 md:px-12 py-8 flex flex-col gap-8'>
         <div className='relative w-full h-50 lg:h-137.5 rounded-2xl overflow-hidden'>
           <Image
-            src={img1}
+            src={property.images?.[0] || img1}
             unoptimized
-            alt='Room interior preview'
+            alt={property.title || 'Room interior preview'}
             fill
             className='object-cover'
           />
@@ -128,21 +207,21 @@ const toggleFaq = (index: number) => {
         {/* Lower Content Main Wrapper (Parent) */}
         <div className='w-full flex flex-col gap-10 lg:flex-row'>
           {/* The Side Bar  */}
-          <div className='lg:order-2 lg:h-full lg:w-1/2 lg:sticky top-40 flex flex-col gap-5 order-2'>
+          <div className='lg:order-2 lg:h-full lg:w-1/2 lg:sticky top-40 flex flex-col gap-5 order-2 lg:min-w-md'>
 
            <div className='w-full rounded-2xl border border-black/10 p-6 '>
            <div className='flex flex-col gap-4'>
              <div className=' flex flex-col items-center gap-1'>
                 <h3 className='font-semibold text-lg'>Book this property</h3>
                 <p className='text-gray-600 text-sm'>Contect the agent to reserve</p>
-                <button className='bg-[#FFF5F6] p-3 mt-2 flex flex-col items-center justify-center rounded-xl w-full'>   <span className='text-xl font-semibold text-red-500'>रु 9000</span> <span className='text-gray-600 text-sm'>per month</span></button>
+                <button className='bg-[#FFF5F6] p-3 mt-2 flex flex-col items-center justify-center rounded-xl w-full'>   <span className='text-xl font-semibold text-red-500'>रु {property.price?.toLocaleString()}</span> <span className='text-gray-600 text-sm'>per month</span></button>
              </div>
  
             <div className='flex flex-col gap-3'>
               <p className='flex justify-between items-center border-b border-black/8 pb-3 text-gray-600 text-sm'> <span className='flex items-center gap-2'> <CiWifiOn size={20}/> Electricity & Water Included</span> <span className='font-semibold'>No</span></p>
               <p className='flex justify-between items-center border-b border-black/8 pb-3 text-gray-600 text-sm'> <span className='flex items-center gap-2'> <MdOutlinePayment size={20} /> Room Sewa Wallet (Rental Payment)</span> <span className='font-semibold'>Yes</span></p>
               <p className='flex justify-between items-center border-b border-black/8 pb-3 text-gray-600 text-sm'> <span className='flex items-center gap-2'> <LuNewspaper size={20} /> Require Rental Agreement</span> <span className='font-semibold'>-</span></p>
-              <p className='flex justify-between items-center pb-3 text-gray-600 text-sm'> <span>Total / month</span><span className='text-xl font-semibold text-red-500'>रु 9000</span></p>
+              <p className='flex justify-between items-center pb-3 text-gray-600 text-sm'> <span>Total / month</span><span className='text-xl font-semibold text-red-500'>रु {property.price?.toLocaleString()}</span></p>
               <button onClick={() => { if (user) { handlePayment(); } else { handlePublish(); } }} className='bg-red-600 text-white rounded-lg flex items-center justify-center p-3 pb-3 font-semibold w-full cursor-pointer'>Pay Advance</button>
               <span className='text-gray-500 text-sm text-center'>Advance moeny is refundable for 1 weeks before moving in</span>
             </div>
@@ -153,8 +232,8 @@ const toggleFaq = (index: number) => {
            <div className='flex flex-col gap-3'>
              <h3 className='text-lg font-semibold'>Need help?</h3>
              <div className='flex flex-col gap-2'>
-              <p className='flex items-center text-gray-600 gap-2'> <span> <MdOutlineEmail /> </span> support@roomsewa.com.np  </p>
-              <p className='flex items-center text-gray-600 gap-2'> <span> <CiPhone />  </span> support@roomsewa.com.np  </p>
+              <p className='flex items-center text-gray-600 gap-2'> <span> <MdOutlineEmail /> </span> {property.owner?.email || "support@roomsewa.com.np"}  </p>
+              <p className='flex items-center text-gray-600 gap-2'> <span> <CiPhone />  </span> {property.owner?.phone || "support@roomsewa.com.np"}  </p>
            </div>
              </div>
            </div>
@@ -162,22 +241,22 @@ const toggleFaq = (index: number) => {
 
 
           {/* Left Content to the Sidebar  */}
-          <div className='flex flex-col gap-6'>
+          <div className='flex flex-col gap-6 min-w-0'>
           <div className='w-full rounded-2xl border border-black/10 p-6'>
             <div className='flex flex-col gap-5'>
               <div className='flex justify-between pb-4 border-b border-black/5'>
                 <div className='flex flex-col gap-3'>
-                  <h3 className='font-semibold text-lg'>This is my property <br /> and 1 to 4 floor by rent</h3>
-                  <p className='text-gray-600 flex gap-1 items-center text-sm'> <CiLocationOn size={16} className='text-red-600' />, Safipur, Ranhola, New Delhi, I... </p>
+                  <h3 className='font-semibold text-lg'>{property.title}</h3>
+                  <p className='text-gray-600 flex gap-1 items-center text-sm'> <CiLocationOn size={16} className='text-red-600' />, {property.location} </p>
                 </div>
                 <div className='flex flex-col'>
-                  <span className='text-lg font-semibold text-red-500'>रु 9000</span>
+                  <span className='text-lg font-semibold text-red-500'>रु {property.price?.toLocaleString()}</span>
                   <p className='text-gray-600 text-sm'> per month </p>
                 </div>
               </div>
               <div className='flex gap-2 items-center '>
-                <span className='bg-neutral-900/80 backdrop-blur-xs rounded-full px-2.5 py-1 text-white text-[11px] font-medium tracking-wide'>1 BHK</span>
-                <span className='bg-neutral-900/80 backdrop-blur-xs rounded-full px-2.5 py-1 text-white text-[11px] font-medium tracking-wide'>FLAT</span>
+                <span className='bg-neutral-900/80 backdrop-blur-xs rounded-full px-2.5 py-1 text-white text-[11px] font-medium tracking-wide'>{property.propertyType}</span>
+                <span className='bg-neutral-900/80 backdrop-blur-xs rounded-full px-2.5 py-1 text-white text-[11px] font-medium tracking-wide'>{property.listingType}</span>
               </div>
             </div>
           </div>
@@ -188,7 +267,7 @@ const toggleFaq = (index: number) => {
               <div className='flex gap-4 items-center'>
                 <Image src={Profile} alt='profile' height={50} width={50} className='rounded-full object-cover' />
                 <div className='flex flex-col'>
-                  <h3 className='font-semibold'>Aditya Sharma</h3>
+                  <h3 className='font-semibold'>{property.owner?.name || "Aditya Sharma"}</h3>
                   <p className='text-gray-600'>Property Agent</p>
                 </div>
               </div>
@@ -199,7 +278,7 @@ const toggleFaq = (index: number) => {
           <div className='border border-black/10 p-6 rounded-2xl'>
             <div className='flex flex-col gap-1'>
               <h3 className='font-semibold text-lg'>About this property</h3>
-              <p className='text-gray-600 text-sm'>2 room, 1 kitchen, 1 bathroom and hall with one temple room</p>
+              <p className='text-gray-600 text-sm'>{property.description}</p>
 
             </div>
           </div>
@@ -207,10 +286,10 @@ const toggleFaq = (index: number) => {
 
           <div className='border border-black/10 p-6 rounded-2xl'>
             <div className='flex flex-col gap-1'>
-              <h3 className='font-semibold text-lg'>Area guide for Safipur, Ranhola, New Delhi, India</h3>
-              <p className="text-gray-600 text-left text-sm">Renters comparing Flat in , Safipur, Ranhola, New Delhi, India usually care about monthly budget, nearby transport, local convenience, and how quickly they can compare similar options in the same area.
+              <h3 className='font-semibold text-lg'>Area guide for {property.location}</h3>
+              <p className="text-gray-600 text-left text-sm">Renters comparing {property.propertyType} in {property.location} usually care about monthly budget, nearby transport, local convenience, and how quickly they can compare similar options in the same area.
                 <br /> <br />
-                Browse similar rooms in , Safipur, Ranhola, New Delhi, India below, or use the filters to narrow down by price and room type.
+                Browse similar rooms in {property.location} below, or use the filters to narrow down by price and room type.
 
               </p>
             </div>
@@ -220,7 +299,16 @@ const toggleFaq = (index: number) => {
           <div className='border border-black/10 p-6 rounded-2xl'>
             <div className='flex flex-col gap-1'>
               <h3 className='font-semibold text-lg'>Facilities & Amenties</h3>
-              <p className='border p-4  rounded-xl border-black/10 bg-[#FBFCFD] flex items-center gap-4'><span className='border flex items-center justify-center border-white/10 h-7 w-7 rounded-full bg-[#FFF5F6] text-red-600'> <FaShower size={16} />  </span>Shower</p>
+              {property.amenities && property.amenities.length > 0 ? (
+                property.amenities.map((item, idx) => (
+                  <p key={idx} className='border p-4 rounded-xl border-black/10 bg-[#FBFCFD] flex items-center gap-4 mb-2'>
+                    <span className='border flex items-center justify-center border-white/10 h-7 w-7 rounded-full bg-[#FFF5F6] text-red-600'> <FaShower size={16} /> </span>
+                    {item}
+                  </p>
+                ))
+              ) : (
+                <p className='border p-4 rounded-xl border-black/10 bg-[#FBFCFD] flex items-center gap-4'><span className='border flex items-center justify-center border-white/10 h-7 w-7 rounded-full bg-[#FFF5F6] text-red-600'> <FaShower size={16} /> </span>Shower</p>
+              )}
             </div>
           </div>
 
@@ -229,7 +317,7 @@ const toggleFaq = (index: number) => {
             <div className='flex flex-col gap-1'>
               <h3 className='font-semibold text-lg'>Location</h3>
               <p className='border p-4 rounded-xl border-black/10 bg-[#FFFBEB] text-amber-700 gap-2 flex text-sm'><CiLocationOn className='shrink-0 mt-1 text-lg' /> Location shownis approximate to protect privacy. Exact address will be shared after booking.</p>
-             <Map center={sampleCoordinates} key={new Date().getTime()} />
+             <Map center={sampleCoordinates} key={property._id || new Date().getTime()} />
             </div>
           </div>
 
@@ -237,9 +325,9 @@ const toggleFaq = (index: number) => {
             <div className='flex flex-col gap-3'>
               <h3 className='font-semibold text-lg'>Exopore nearby rental</h3>
               <div className='flex flex-col gap-3 '>
-              <p className='border py-2 px-4 rounded-full border-black/10 bg-[#FBFCFD] flex items-center gap-4 text-sm'>Rooms for rent in, Safipur, Ranhola, New Delhi, India</p>
-               <p className='border py-2 px-4 rounded-full border-black/10 bg-[#FBFCFD] flex items-center gap-4 text-sm'>Flats in, Safipur, Ranhola, New Delhi, India</p>
-                <p className='border py-2 px-4 rounded-full border-black/10 bg-[#FBFCFD] flex items-center gap-4 text-sm'>Hostels in, Safipur, Ranhola, New Delhi, India</p>
+              <p className='border py-2 px-4 rounded-full border-black/10 bg-[#FBFCFD] flex items-center gap-4 text-sm'>Rooms for rent in {property.location}</p>
+               <p className='border py-2 px-4 rounded-full border-black/10 bg-[#FBFCFD] flex items-center gap-4 text-sm'>Flats in {property.location}</p>
+                <p className='border py-2 px-4 rounded-full border-black/10 bg-[#FBFCFD] flex items-center gap-4 text-sm'>Hostels in {property.location}</p>
               </div>
             </div>
           </div>   
@@ -301,7 +389,7 @@ const toggleFaq = (index: number) => {
         onClick={() => toggleFaq(0)}
       >
         <h3 className='font-semibold text-base md:text-lg text-neutral-800'>
-          Is this Flat in, Safipur, Ranhola, New Delhi, India suitable for monthly rent?
+          Is this {property.propertyType} in {property.location} suitable for monthly rent?
         </h3>
         <span className={`transform transition-transform duration-200 ${activeFaqIndex === 0 ? 'rotate-180' : ''}`}>
           <MdKeyboardArrowDown size={24} />
@@ -309,7 +397,7 @@ const toggleFaq = (index: number) => {
       </div>
       {activeFaqIndex === 0 && (
         <p className='text-gray-600 text-sm mt-2 transition-all duration-200'>
-          This listing is presented as a rental option in, Safipur, Ranhola, New Delhi, India with pricing, images, facilities, and contact information to help renters compare monthly accommodation choices.
+          This listing is presented as a rental option in {property.location} with pricing, images, facilities, and contact information to help renters compare monthly accommodation choices.
         </p>
       )}
     </div>
@@ -321,7 +409,7 @@ const toggleFaq = (index: number) => {
         onClick={() => toggleFaq(1)}
       >
         <h3 className='font-semibold text-base md:text-lg text-neutral-800'>
-          Are there similar rentals near, Safipur, Ranhola, New Delhi, India?
+          Are there similar rentals near {property.location}?
         </h3>
         <span className={`transform transition-transform duration-200 ${activeFaqIndex === 1 ? 'rotate-180' : ''}`}>
           <MdKeyboardArrowDown size={24} />

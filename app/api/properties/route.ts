@@ -16,12 +16,23 @@ export async function GET(req: Request) {
     const section = searchParams.get("section");
     const place = searchParams.get("place");
     const search = searchParams.get("search")?.trim();
+     const id = searchParams.get("id");
 
-    // 🔎 SEARCH PROPERTIES
-    // Example:
-    // /api/properties?search=room
-    // /api/properties?search=kathmandu
-    // /api/properties?search=apartment
+    if (id) {
+      const property = await Property.findById(id).lean();
+
+      if (!property) {
+        return Response.json(
+          {
+            message: "Property not found",
+          },
+          { status: 404 }
+        );
+      }
+
+      return Response.json(property, { status: 200 });
+    }
+
     if (search) {
       const regex = new RegExp(
         search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
