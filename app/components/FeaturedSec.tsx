@@ -1,32 +1,59 @@
 "use client"
 
 import { CiHeart, CiLocationOn } from 'react-icons/ci'
-import Img1 from "@/public/FeaturedImages/Img1.webp"
-import Img2 from "@/public/FeaturedImages/Img2.webp"
-import Img7 from "@/public/FeaturedImages/Img3.webp"
-import Img4 from "@/public/FeaturedImages/Img4.webp"
-import Img5 from "@/public/FeaturedImages/Img5.webp"
-import Img6 from "@/public/FeaturedImages/Img6.webp"
-import Img3 from "@/public/CheapestSecImges/Img8.webp"
-import Img8 from "@/public/CheapestSecImges/Img8.webp"
+
 import Image from 'next/image'
 import { useRouter } from 'next/navigation' 
+import { useEffect, useState } from 'react'
+  import DefaultImg from "@/public/CheapestSecImges/Img8(NoImgSelected).webp"
+
+  interface Property {
+    _id: string;
+    title: string;
+    propertyType: string;
+    units: number;
+    price: number;
+    location: string;
+    images: string[];
+  }
 
 
 const FeaturedSec = () => {
   const router = useRouter()
-    const categories = [
-    { src: Img1, amount: 65000, address: "Balaju Chowk, Ring Road, Kathmandu", room: "1 OFFCIE SPACE" },
-    { src: Img2, amount: 25000, address: "Maharajgunj, Kathmandu, Nepal", room: "3 BK" },
-    { src: Img3, amount: 28000, address: "Dhangadi Chowk, Nepal", room: "2 BHK" },
-    { src: Img4, amount: 30000, address: "Chattisgarh Ilaka, India", room: "1 ROOM" },
-    { src: Img5, amount: 20000, address: "Kashmir Street, Pakistan", room: "1 FLAT" },
-    { src: Img6, amount: 15000, address: "Dakshinkali -1, Bosan DKT, Dakshinkal", room: "2 BK" },
-    { src: Img7, amount: 18000, address: "New Baneshwor, Kathmandu, Nepal", room: "2 ROOMS" },
-    { src: Img8, amount: 23000, address: "New Road, Madhyapur Thimi, Kathmandu,", room: "2BHK" },
-]
+   const [properties, setProperties] = useState<Property[]>([]);
+      const [loading, setLoading] = useState<boolean>(true);
+      const [error, setError] = useState<any>("");
+
+   useEffect(() => {
+          const featuredRooms = async() =>{
+            try {
+              const response = await fetch("/api/properties?section=featured")
+              if(!response.ok){
+                throw new error("failed to fetch featured rooms")
+              }
+              const data = await response.json()
+              setProperties(data)
+            } catch (error) {
+              console.log("Cheapest room section error: ",error)
+              setError("Failed to load properties");
+            }
+            finally{
+              setLoading(false)
+            }
+          }
+          featuredRooms()
+        }, [])
+  
+        if(loading) {
+          return <p>Loading featured rooms...</p>
+        }
+  
+        if(error){
+        return  <p>{error}</p>
+        }
+  
   return (
-    <div className='max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 py-8 border-b border-black/10 '> 
+    <div className='max-w-345 mx-auto px-4 sm:px-8 md:px-12 py-8 border-b border-black/10 '> 
        {/* Header Section */}
       <div className='flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-6'>
         <div className='flex flex-col gap-1.5'>
@@ -45,16 +72,18 @@ const FeaturedSec = () => {
 
         {/* Grid Wrapper: Houses each unified Card item */}
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-8'>
-              {categories.map((cat, index) => (
-                
-                <div key={index} className='flex flex-col gap-3 group cursor-pointer'>
+              {properties.map((property) => {
+                  const hasImage = Array.isArray(property?.images) && property.images.length > 0 && property.images[0];
+          const imageSrc = hasImage ? property.images[0] : DefaultImg;
+          return (
+                <div key={property._id} className='flex flex-col gap-3 group cursor-pointer'>
                   
                   {/* Image Wrapper */}
-                  <div onClick={() => router.push('/roomDescription')} className='relative w-full h-[240px] rounded-2xl overflow-hidden border border-black/5 bg-neutral-100 shadow-sm'>
-                    <Image  src={cat.src}  alt={`Affordable rental option ${index + 1}`}  fill sizes="(max-w-640px) 100vw, (max-w-768px) 50vw, (max-w-1024px) 33vw, 25vw" className='object-cover group-hover:scale-105 transition-transform duration-300' />
+                  <div onClick={() => router.push('/roomDescription')} className='relative w-full h-60 rounded-2xl overflow-hidden border border-black/5 bg-neutral-100 shadow-sm'>
+                    <Image  src={imageSrc}  alt={`Affordable rental option`}  fill sizes="(max-w-640px) 100vw, (max-w-768px) 50vw, (max-w-1024px) 33vw, 25vw" className='object-cover group-hover:scale-105 transition-transform duration-300' />
                     <div className='flex w-full justify-between items-center absolute top-0 p-3 z-10 '>
                       <span className='bg-neutral-900/80 backdrop-blur-xs rounded-full px-2.5 py-1 text-white text-[11px] font-medium tracking-wide'>
-                        {cat.room}
+                        {property.units} {property.propertyType}
                       </span>
                       <span className='h-8 w-8 rounded-full bg-white/90 backdrop-blur-xs text-neutral-700 hover:text-red-500 hover:scale-105 transition-all flex items-center justify-center shadow-xs'> 
                         <CiHeart size={20} className='stroke-[0.5]' /> 
@@ -66,21 +95,21 @@ const FeaturedSec = () => {
                     <div className='flex items-center justify-between'>
                       <p className='font-bold text-neutral-900 flex items-baseline gap-0.5'> 
                         <span className='text-lg font-semibold text-neutral-700'>रु</span>
-                        <span className='text-lg'>{cat.amount.toLocaleString()}</span>
+                        <span className='text-lg'>{property.price.toLocaleString()}</span>
                       </p>
                       <span className='bg-neutral-100 font-medium rounded-md px-2 py-0.5 text-neutral-600 text-[11px]'>
-                        {cat.room}
+                         {property.units} {property.propertyType}
                       </span>
                     </div>
                     
                     <div className='text-neutral-500 flex items-start gap- mt-0.5'>  
                       <CiLocationOn size={15} className='shrink-0 mt-0.5 text-neutral-400' /> 
-                      <span className='line-clamp-1 leading-tight text-sm'>{cat.address}</span> 
+                      <span className='line-clamp-1 leading-tight text-sm'>{property.location}</span> 
                     </div>
                   </div>
       
                 </div>
-              ))}
+              )})}
             </div>
     </div>
   )

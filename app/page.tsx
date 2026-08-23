@@ -17,10 +17,10 @@ export default function page() {
       <Homepage/>
       <PopularRooms/>
       <CheapestRoomSec/>
+            <FeaturedSec/>
       <WhyRoomSewa/>
       <QuickRental/>
       <EarnWithRoomSewa/>
-            <FeaturedSec/>
 
       <QuestionSec/>
       <Footer/>

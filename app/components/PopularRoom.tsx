@@ -6,21 +6,21 @@ const cities = [
   {
     name: "Kathmandu",
     link: "/exploreproperty",
-    image: "/images/khathmandu.avif",
+    image: "/images/khathmandu.webp",
     description:
       "Rooms, flats, and family apartments close to study hubs, offices, and transport routes in Kathmandu.",
   },
   {
     name: "Pokhara",
     link: "/exploreproperty",
-    image: "/images/pokhara.avif",
+    image: "/images/pokhara.webp",
     description:
       "Affordable rentals and flexible rooms in Pokhara for students, workers, and long-stay renters.",
   },
   {
     name: "Lalitpur",
     link: "/exploreproperty",
-    image: "/images/lalitpur.avif",
+    image: "/images/lalitpur.webp",
     description:
       "Popular rentals in Patan, Kupondole, Imadol, and the surrounding neighborhoods.",
   },
@@ -35,7 +35,7 @@ const cities = [
 
 export default function PopularRooms() {
   return (
-    <section className="max-w-[1380px] mx-auto py-10 lg:py-8 border-b border-black/10 px-4 sm:px-8 md:px-12">
+    <section className="max-w-345 mx-auto py-10 lg:py-8 border-b border-black/10 px-4 sm:px-8 md:px-12">
       <div className="mb-10 text-center md:text-left">
         <h2 className="text-3xl sm:text-4xl lg:text-4xl font-bold text-gray-900">
           Popular room searches by city

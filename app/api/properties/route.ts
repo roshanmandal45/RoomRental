@@ -5,13 +5,75 @@ import { adminAuth } from "@/app/lib/firebaseAdmin";
 import cloudinary from "@/app/lib/cloudinary";
 
 // GET Properties
-export async function GET() {
+export async function GET(req:Request) {
   try {
     await dbConnect();
 
-    const properties = await Property.find();
+   const { searchParams } = new URL(req.url)
+   const section = searchParams.get("section")
+   const place = searchParams.get("place");
 
-    return Response.json(properties, { status: 200 });
+   //Cheapest Rooms
+   if(section === "cheapest"){
+    const properties = await Property.find({
+      status: "AVAILABLE",
+      listingType: "RENT"
+    })
+    .sort({ price: 1 }).limit(8)
+    return Response.json(properties)
+   }
+
+   //Latest Rooms
+    if (section === "latest") {
+    const properties = await Property.find({
+      status: "AVAILABLE",
+    })
+      .sort({ createdAt: -1 })
+      .limit(8);
+
+    return Response.json(properties);
+  }
+
+     //Random(for now) featured properties
+    if (section === "featured") {
+      const properties = await Property.aggregate([
+        {
+          $match: {
+            status: "AVAILABLE",
+            listingType: "RENT",
+          },
+        },
+        {
+          $sample: {
+            size: 8,
+          },
+        },
+      ]);
+      return Response.json(properties);
+    }
+
+      //Properties by place
+    if (section === "place" && place) {
+      const properties = await Property.find({
+        status: "AVAILABLE",
+        listingType: "RENT",
+        location: {
+          $regex: place,
+          $options: "i",
+        },
+      })
+        .sort({ createdAt: -1 })
+        .limit(8);
+
+      return Response.json(properties, { status: 200 });
+    }
+
+    return Response.json(
+      { message: "Invalid section or missing parameters" },
+      { status: 400 }
+    );
+
+  
   } catch (error) {
     console.log(error);
 

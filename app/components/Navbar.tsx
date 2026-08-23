@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "@/public/logo.svg";
+import Logo from "@/public/heroSecImages/logo.svg";
 import room from "@/public/CatImages/roomicon.webp";
 import BK from "@/public//CatImages/BK.webp";
 import BHK from "@/public//CatImages/BHK.webp";

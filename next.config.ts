@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
     domains: [
       "lh3.googleusercontent.com",
     ],
+      remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+    ],
   },
 };
 

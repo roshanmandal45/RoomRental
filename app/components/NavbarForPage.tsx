@@ -2,17 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "@/public/logo.svg";
-import room from "@/public/CatImages/roomicon.webp";
-import BK from "@/public//CatImages/BK.webp";
-import BHK from "@/public//CatImages/BHK.webp";
-import Hostel from "@/public/CatImages/hostel.webp";
-import Hotel from "@/public/CatImages/Hotel.webp";
-import Apartment from "@/public/CatImages/apartment.webp";
-import Office from "@/public/CatImages/office.webp";
-import House from "@/public/CatImages/house.webp";
-import Flat from "@/public/CatImages/Flat.webp";
-import Cottage from "@/public/CatImages/Cottage.webp";
+import Logo from "@/public/heroSecImages/logo.svg";
 import { IoMenuOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { MdOutlineVerified } from "react-icons/md";

@@ -50,7 +50,47 @@ const RoomDescription = () => {
   const [images, setImages] = useState<ImageFile[]>([]);
   const [youtubeVideo, setYoutubeVideo] = useState<string>("");
 
+  const [isPublishing, setIsPublishing] = useState(false);
+
   const handleSubmit = async () => {
+    
+
+    if (!propertyType) {
+  alert("Please select a property type.");
+  return;
+}
+
+if (title.trim().length < 10) {
+  alert("Title must be at least 10 characters.");
+  return;
+}
+
+if (!descri.trim()) {
+  alert("Please add a description.");
+  return;
+}
+
+if (!location.trim()) {
+  alert("Please enter the property location.");
+  return;
+}
+
+if (!rent || rent <= 0) {
+  alert("Please enter a valid rent amount.");
+  return;
+}
+
+if (!phone.trim()) {
+  alert("Please enter your contact number.");
+  return;
+}
+
+// if (images.length === 0) {
+//   alert("Please upload at least one property image.");
+//   return;
+// }
+
+setIsPublishing(true)
     try {
       // 1. Make sure Firebase authentication has finished loading
       if (loading) {
@@ -106,11 +146,27 @@ const RoomDescription = () => {
 
       console.log("Property created successfully:", data);
 
+      alert("Property Published Successfully...")
+      // Reset form ONLY after successful publishing
+    setTitle("");
+    setDescri("");
+    setLocation("");
+    setImages([]);
+    setFacilities([]);
+    setPhone("");
+    setPropertyType(null);
+    setRent("");
+    setYoutubeVideo("");
+    setUnit(1);
+
       // Optional: redirect after successful publish
       // router.push("/properties");
 
     } catch (error) {
       console.error("Failed to create property:", error);
+    }
+    finally{
+      setIsPublishing(false)
     }
   };
 
@@ -125,7 +181,8 @@ const RoomDescription = () => {
         <div className="w-full flex flex-col gap-10 lg:flex-row">
 
           {/* Sidebar */}
-          <Sidebar handleSubmit={handleSubmit} />
+
+          <Sidebar handleSubmit={handleSubmit}  isPublishing = {isPublishing}/>
 
           {/* Form Content */}
           <div className="flex flex-col gap-6">

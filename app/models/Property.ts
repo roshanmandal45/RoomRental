@@ -39,6 +39,7 @@ export interface IProperty extends Document {
   youtubeVideo?: string;
 
   status: "AVAILABLE" | "RENTED" | "SOLD";
+  isFeatured: boolean;
 
   createdAt: Date;
   updatedAt: Date;
@@ -135,6 +136,10 @@ const PropertySchema = new Schema<IProperty>(
       enum: ["AVAILABLE", "RENTED", "SOLD"],
       default: "AVAILABLE",
     },
+    isFeatured: {
+  type: Boolean,
+  default: false,
+},
   },
   {
     timestamps: true,
