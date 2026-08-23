@@ -9,6 +9,7 @@ import QuickRental from './components/QuickRental'
 import EarnWithRoomSewa from './components/EarnwithRent'
 import QuestionSec from './components/Questions'
 import Navbar from './components/Navbar'
+import LatestCompo from './components/LatestCompo'
 
 export default function page() {
   return (
@@ -16,6 +17,7 @@ export default function page() {
       <Navbar/>
       <Homepage/>
       <PopularRooms/>
+      <LatestCompo/>
       <CheapestRoomSec/>
             <FeaturedSec/>
       <WhyRoomSewa/>
