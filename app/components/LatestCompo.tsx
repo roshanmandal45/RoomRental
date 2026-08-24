@@ -100,7 +100,7 @@
                   </span>
                 </div>
               </div>
-
+                       
               <div className='flex flex-col gap-1 px-1'>
                 <div className='flex items-center justify-between'>
                   <p className='font-bold text-neutral-900 flex items-baseline gap-0.5'> 

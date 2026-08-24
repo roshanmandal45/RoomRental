@@ -15,7 +15,6 @@ import NavbarForPage from "@/app/components/NavbarForPage";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import RoomDescription from '../roomDescription/[id]/page';
 
 const propertyTypes = [
   "All",

@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import img1 from "@/public/roomDescrImages/img1.webp"
 import Image from 'next/image'
 import { CiHeart, CiLocationOn, CiPhone, CiWifiOn } from 'react-icons/ci'
 import Profile from "@/public/roomDescrImages/Profile.webp"
