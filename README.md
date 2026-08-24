@@ -52,6 +52,6 @@ About Us blogs and privacy policy and terms conditions pages
 
 to do :
 flicker
-chatbox
+chatbox done
 blackdot line while scrolling up
-search list in explore 
+search list in explore  
