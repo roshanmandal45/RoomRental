@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { AuthProvider } from "./context/AuthContext";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import ChatBox from "./components/chatBox/chatbox";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -30,7 +31,8 @@ export default function RootLayout({
         <AuthProvider>
           {children}
         </AuthProvider>
+        <ChatBox/>
       </body>
-    </html>
+    </html> 
   );
 }
