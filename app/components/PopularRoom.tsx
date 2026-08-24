@@ -5,28 +5,28 @@ import { ArrowRight } from "lucide-react";
 const cities = [
   {
     name: "Kathmandu",
-    link: "/exploreproperty",
+    link: "/exploreproperty?place=Kathmandu",
     image: "/images/khathmandu.webp",
     description:
       "Rooms, flats, and family apartments close to study hubs, offices, and transport routes in Kathmandu.",
   },
   {
     name: "Pokhara",
-    link: "/exploreproperty",
+    link: "/exploreproperty?place=Pokhara",
     image: "/images/pokhara.webp",
     description:
       "Affordable rentals and flexible rooms in Pokhara for students, workers, and long-stay renters.",
   },
   {
     name: "Lalitpur",
-    link: "/exploreproperty",
+    link: "/exploreproperty?place=Lalitpur",
     image: "/images/lalitpur.webp",
     description:
       "Popular rentals in Patan, Kupondole, Imadol, and the surrounding neighborhoods.",
   },
   {
     name: "Bhaktapur",
-    link: "/exploreproperty",
+    link: "/exploreproperty?place=Bhaktapur",
     image: "/images/bhaktapur.jpg",
     description:
       "Budget-friendly rooms and flats across Bhaktapur for families, students, and first-time renters.",

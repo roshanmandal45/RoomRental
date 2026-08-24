@@ -25,7 +25,7 @@ export interface ImageFile {
 }
 
 const RoomDescription = () => {
-  const { user, loading } = useAuth();
+  const { loading } = useAuth();
   const router = useRouter();
 
   // First Container
@@ -51,6 +51,18 @@ const RoomDescription = () => {
   const [youtubeVideo, setYoutubeVideo] = useState<string>("");
 
   const [isPublishing, setIsPublishing] = useState(false);
+
+  // Sidebar
+  const checklist = {
+  propertyType: !!propertyType,
+  title: title.trim().length >= 10,
+  description: !!descri,
+  location: !!location,
+  rent: !!rent,
+  facilities: facilities.length > 0,
+  phone: !!phone,
+  photo: images.length > 0,
+}
 
   const handleSubmit = async () => {
     
@@ -85,10 +97,6 @@ if (!phone.trim()) {
   return;
 }
 
-// if (images.length === 0) {
-//   alert("Please upload at least one property image.");
-//   return;
-// }
 
 setIsPublishing(true)
     try {
@@ -182,7 +190,7 @@ setIsPublishing(true)
 
           {/* Sidebar */}
 
-          <Sidebar handleSubmit={handleSubmit}  isPublishing = {isPublishing}/>
+          <Sidebar handleSubmit={handleSubmit}  isPublishing = {isPublishing} checklist = {checklist}/>
 
           {/* Form Content */}
           <div className="flex flex-col gap-6">

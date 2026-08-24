@@ -3,11 +3,21 @@ import { GoVerified } from 'react-icons/go'
 import { MdOutlineEmail } from 'react-icons/md'
 
 interface SidebarProps {
-  handleSubmit: () => void; 
-  isPublishing: boolean
+  handleSubmit: () => void;
+  isPublishing: boolean;
+  checklist: {
+    propertyType: boolean
+    title: boolean
+    description: boolean
+    location: boolean
+    rent: boolean
+    facilities: boolean
+    phone: boolean
+    photo: boolean
+  }
 }
 
-const Sidebar = ({handleSubmit, isPublishing}: SidebarProps) => {
+const Sidebar = ({handleSubmit, isPublishing, checklist}: SidebarProps) => {
   return (
     <div className='lg:order-2 lg:h-full lg:w-1/2 lg:sticky top-40 flex flex-col gap-5 order-2'>
 
@@ -22,38 +32,107 @@ const Sidebar = ({handleSubmit, isPublishing}: SidebarProps) => {
               <div className='px-6 py-4 flex flex-col gap-4'>
 
                 <div className='flex flex-col gap-2'>
-                  <div className='flex items-center gap-2 text-gray-400'>
-                    <span className='h-4 w-4 shrink-0 rounded-full border border-gray-300'></span>
+                  <div className={`flex items-center gap-2 ${checklist.propertyType ? "text-green-600" : "text-gray-400"}`}>
+                    <span className={`h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${
+                      checklist.propertyType
+                        ? "bg-green-500 border-green-500"
+                        : "border-gray-300"
+                    }`}>
+                      {checklist.propertyType && (
+                        <span className="text-white text-[10px] font-bold">✓</span>
+                      )}
+                    </span>
                     <p>Property type selected</p>
                   </div>
 
-                  <div className='flex items-center gap-2 text-gray-400'>
-                    <span className='h-3 w-3 shrink-0 rounded-full border border-gray-300'></span>
+                  <div className={`flex items-center gap-2 ${checklist.title ? "text-green-600" : "text-gray-400"}`}>
+                    <span className={`h-3 w-3 shrink-0 rounded-full border flex items-center justify-center ${
+                      checklist.title
+                        ? "bg-green-500 border-green-500"
+                        : "border-gray-300"
+                    }`}>
+                      {checklist.title && (
+                        <span className="text-white text-[9px] font-bold">✓</span>
+                      )}
+                    </span>
                     <p>Title (min 10 characters)</p>
                   </div>
 
-                  <div className='flex items-center gap-2 text-gray-400'>
-                    <span className='h-4 w-4 shrink-0 rounded-full border border-gray-300'></span>
+                  <div className={`flex items-center gap-2 ${checklist.description ? "text-green-600" : "text-gray-400"}`}>
+                    <span className={`h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${
+                      checklist.description
+                        ? "bg-green-500 border-green-500"
+                        : "border-gray-300"
+                    }`}>
+                      {checklist.description && (
+                        <span className="text-white text-[10px] font-bold">✓</span>
+                      )}
+                    </span>
                     <p>Description added</p>
                   </div>
 
-                  <div className='flex items-center gap-2 text-gray-400'>
-                    <span className='h-4 w-4 shrink-0 rounded-full border border-gray-300'></span>
+                  <div className={`flex items-center gap-2 ${checklist.location ? "text-green-600" : "text-gray-400"}`}>
+                    <span className={`h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${
+                      checklist.location
+                        ? "bg-green-500 border-green-500"
+                        : "border-gray-300"
+                    }`}>
+                      {checklist.location && (
+                        <span className="text-white text-[10px] font-bold">✓</span>
+                      )}
+                    </span>
                     <p>Address & map location</p>
                   </div>
 
-                  <div className='flex items-center gap-2 text-gray-400'>
-                    <span className='h-4 w-4 shrink-0 rounded-full border border-gray-300'></span>
+                  <div className={`flex items-center gap-2 ${checklist.rent ? "text-green-600" : "text-gray-400"}`}>
+                    <span className={`h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${
+                      checklist.rent
+                        ? "bg-green-500 border-green-500"
+                        : "border-gray-300"
+                    }`}>
+                      {checklist.rent && (
+                        <span className="text-white text-[10px] font-bold">✓</span>
+                      )}
+                    </span>
                     <p>Rent amount</p>
                   </div>
 
-                  <div className='flex items-center gap-2 text-gray-400'>
-                    <span className='h-4 w-4 shrink-0 rounded-full border border-gray-300'></span>
+                   <div className={`flex items-center gap-2 ${checklist.rent ? "text-green-600" : "text-gray-400"}`}>
+                    <span className={`h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${
+                      checklist.facilities
+                        ? "bg-green-500 border-green-500"
+                        : "border-gray-300"
+                    }`}>
+                      {checklist.facilities && (
+                        <span className="text-white text-[10px] font-bold">✓</span>
+                      )}
+                    </span>
+                    <p>Facilities & Amenities</p>
+                  </div>
+
+                  <div className={`flex items-center gap-2 ${checklist.phone ? "text-green-600" : "text-gray-400"}`}>
+                    <span className={`h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${
+                      checklist.phone
+                        ? "bg-green-500 border-green-500"
+                        : "border-gray-300"
+                    }`}>
+                      {checklist.phone && (
+                        <span className="text-white text-[10px] font-bold">✓</span>
+                      )}
+                    </span>
                     <p>Contact number</p>
                   </div>
 
-                  <div className='flex items-center gap-2 text-gray-400'>
-                    <span className='h-4 w-4 shrink-0 rounded-full border border-gray-300'></span>
+                  <div className={`flex items-center gap-2 ${checklist.photo ? "text-green-600" : "text-gray-400"}`}>
+                    <span className={`h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${
+                      checklist.photo
+                        ? "bg-green-500 border-green-500"
+                        : "border-gray-300"
+                    }`}>
+                      {checklist.photo && (
+                        <span className="text-white text-[10px] font-bold">✓</span>
+                      )}
+                    </span>
                     <p>Atleast one photo</p>
                   </div>
 

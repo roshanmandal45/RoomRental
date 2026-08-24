@@ -14,7 +14,6 @@ const Jodit = dynamic(() => import("jodit-react"), {
 export default function JoditEditor({
   setContent,
 }: JoditEditorProps) {
-
   const editor = useRef(null);
 
   const config = useMemo(
@@ -46,11 +45,20 @@ export default function JoditEditor({
     []
   );
 
+  const handleChange = (html: string) => {
+    const temp = document.createElement("div");
+    temp.innerHTML = html;
+
+    const plainText = temp.textContent || "";
+
+    setContent(plainText);
+  };
+
   return (
     <Jodit
       ref={editor}
       config={config}
-      onBlur={(newContent) => setContent(newContent)}
+      onChange={handleChange}
     />
   );
 }
