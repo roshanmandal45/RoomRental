@@ -1313,14 +1313,14 @@ const Navbar = () => {
             </Link>
 
             <Link
-              href="#"
+              href="/blogs"
               className="block px-4 py-3.5 text-sm font-medium hover:bg-neutral-50 border-b border-black/[0.05]"
             >
               Blog
             </Link>
 
             <Link
-              href="#"
+              href="/help"
               className="block px-4 py-3.5 text-sm font-medium hover:bg-neutral-50"
             >
               Help & Support

@@ -50,3 +50,8 @@ Authentication
 Imagekit for upload of images
 About Us blogs and privacy policy and terms conditions pages
 
+to do :
+flicker
+chatbox
+blackdot line while scrolling up
+search list in explore 

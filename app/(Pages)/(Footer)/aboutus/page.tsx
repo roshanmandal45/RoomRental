@@ -48,7 +48,7 @@ const AboutPage = () => {
 
               <div className="relative w-full h-[330px] sm:h-[390px] lg:h-[430px]">
                 <Image
-                  src={"/images/aboutus.svg"}
+                  src={"/images/blogs3.avif"}
                   alt="Property rental illustration"
                   fill
                   priority

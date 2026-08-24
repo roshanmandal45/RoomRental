@@ -6,21 +6,21 @@ const cities = [
   {
     name: "Kathmandu",
     link: "/exploreproperty",
-    image: "/images/khathmandu.webp",
+    image: "/PopularSecImages/kathmandu.webp",
     description:
       "Rooms, flats, and family apartments close to study hubs, offices, and transport routes in Kathmandu.",
   },
   {
     name: "Pokhara",
     link: "/exploreproperty",
-    image: "/images/pokhara.webp",
+    image: "/PopularSecImages/pokhara.webp",
     description:
       "Affordable rentals and flexible rooms in Pokhara for students, workers, and long-stay renters.",
   },
   {
     name: "Lalitpur",
     link: "/exploreproperty",
-    image: "/images/lalitpur.webp",
+    image: "/PopularSecImages/lalitpur.webp",
     description:
       "Popular rentals in Patan, Kupondole, Imadol, and the surrounding neighborhoods.",
   },
