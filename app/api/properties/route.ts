@@ -122,6 +122,76 @@ export async function GET(req: Request) {
       return Response.json(properties, { status: 200 });
     }
 
+    // Properties in Kathmandu
+if (section === "kathmandu") {
+  const properties = await Property.find({
+    status: "AVAILABLE",
+    listingType: "RENT",
+    location: {
+      $regex: "Kathmandu",
+      $options: "i",
+    },
+  })
+    .sort({ createdAt: -1 })
+    .limit(6)
+    .lean();
+
+  return Response.json(properties, { status: 200 });
+}
+
+ // Properties in Pokhara
+if (section === "kathmandu") {
+  const properties = await Property.find({
+    status: "AVAILABLE",
+    listingType: "RENT",
+    location: {
+      $regex: "Pokhara",
+      $options: "i",
+    },
+  })
+    .sort({ createdAt: -1 })
+    .limit(6)
+    .lean();
+
+  return Response.json(properties, { status: 200 });
+}
+
+ // Properties in Lalitput
+if (section === "kathmandu") {
+  const properties = await Property.find({
+    status: "AVAILABLE",
+    listingType: "RENT",
+    location: {
+      $regex: "Lalitput",
+      $options: "i",
+    },
+  })
+    .sort({ createdAt: -1 })
+    .limit(6)
+    .lean();
+
+  return Response.json(properties, { status: 200 });
+}
+
+ // Properties in Bhaktapur
+if (section === "kathmandu") {
+  const properties = await Property.find({
+    status: "AVAILABLE",
+    listingType: "RENT",
+    location: {
+      $regex: "Bhaktapur",
+      $options: "i",
+    },
+  })
+    .sort({ createdAt: -1 })
+    .limit(6)
+    .lean();
+
+  return Response.json(properties, { status: 200 });
+}
+
+
+    
     return Response.json(
       {
         message: "Invalid section or missing parameters",

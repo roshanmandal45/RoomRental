@@ -13,6 +13,8 @@ import {
 import Footer from "@/app/components/Footer";
 import NavbarForPage from "@/app/components/NavbarForPage";
 import Link from "next/link";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const propertyTypes = [
   "All",
@@ -28,58 +30,65 @@ const propertyTypes = [
   "OFFICE SPACE",
 ];
 
-const properties = [
-  {
-    id: 1,
-    type: "2 BHK",
-    title: "Modern Family Apartment",
-    location: "Kathmandu",
-    image: "/FeaturedImages/Img1.webp",
-    // price: "Rs. 18,000",
-  },
-  {
-    id: 2,
-    type: "ROOM",
-    title: "Single Room",
-    location: "Kathmandu",
-    image: "/FeaturedImages/Img2.webp",
-    price: "Rs. 12,000",
-  },
-  {
-    id: 3,
-    type: "OFFICE",
-    title: "Office Space",
-    location: "Kathmandu",
-    image: "/FeaturedImages/Img3.webp",
-    price: "Rs. 30,000",
-  },
-  {
-    id: 4,
-    type: "HOSTEL",
-    title: "Student Hostel",
-    location: "Kathmandu",
-    image: "/FeaturedImages/Img4.webp",
-    price: "Rs. 10,000",
-  },
-  {
-    id: 5,
-    type: "HOTEL",
-    title: "Luxury Hotel",
-    location: "Kathmandu",
-    image: "/FeaturedImages/Img5.webp",
-    price: "Rs. 35,000",
-  },
-  {
-    id: 6,
-    type: "FLAT",
-    title: "Rental Flat",
-    location: "Kathmandu",
-    image: "/FeaturedImages/Img6.webp",
-    price: "Rs. 22,000",
-  },
-];
+interface Property {
+  _id: string;
+  title: string;
+  description: string;
+  propertyType: string;
+  listingType: string;
+  units: number;
+  price: number;
+  location: string;
+  amenities: string[];
+  images: string[];
+  youtubeVideo?: string;
+  status: string;
+}
 
+// Wrapper
 export default function ExploreProperty() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ExplorePropertyContent />
+    </Suspense>
+  );
+}
+
+  function ExplorePropertyContent() {
+  const searchParams = useSearchParams();
+
+  const place = searchParams.get("place") || "Kathmandu";
+
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        setLoading(true);
+
+        const response = await fetch(
+          `/api/properties?section=place&place=${encodeURIComponent(place)}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch properties");
+        }
+
+        const data = await response.json();
+
+        setProperties(data);
+      } catch (error) {
+        console.error("Failed to fetch properties:", error);
+        setProperties([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, [place]);
+
   return (
     <>
       <NavbarForPage />
@@ -126,7 +135,8 @@ export default function ExploreProperty() {
                   </div>
 
                   <input
-                    placeholder="Kathmandu"
+                    value={place}
+                    readOnly
                     className="w-full mt-3 bg-transparent outline-none text-base font-semibold text-neutral-900 placeholder:text-neutral-400"
                   />
                 </div>
@@ -196,7 +206,7 @@ export default function ExploreProperty() {
               </p>
 
               <h2 className="mt-2 text-3xl sm:text-4xl font-black tracking-[-1px] text-neutral-950">
-                Explore Properties
+                Rooms in {place}
               </h2>
 
               <p className="mt-2 text-sm text-neutral-500">
@@ -204,7 +214,7 @@ export default function ExploreProperty() {
                 <span className="font-semibold text-neutral-800">
                   {properties.length}
                 </span>{" "}
-                properties available in Nepal
+                properties available in {place}
               </p>
             </div>
 
@@ -257,145 +267,137 @@ export default function ExploreProperty() {
 
             <div className="border border-black/[0.08] bg-[#f7f7f5] rounded-full px-4 py-2 flex items-center gap-2 text-sm font-medium text-neutral-700">
               <Search size={14} className="text-red-500" />
-              Kathmandu
+              {place}
             </div>
 
             <div className="border border-black/[0.08] bg-[#f7f7f5] rounded-full px-4 py-2 flex items-center gap-2 text-sm font-medium text-neutral-700">
               <MapPin size={14} className="text-red-500" />
-              Kathmandu
+              {place}
             </div>
           </div>
 
           {/* PROPERTY GRID */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-7 mt-10">
 
-            {properties.map((property) => (
-              <div
-                key={property.id}
-                className="group overflow-hidden rounded-[28px] border border-black/[0.07] bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(0,0,0,0.09)]"
-              >
+          {loading ? (
+            <div className="mt-10 flex items-center justify-center py-20">
+              <p className="text-sm text-neutral-500">
+                Loading properties...
+              </p>
+            </div>
+          ) : properties.length === 0 ? (
+            <div className="mt-10 flex items-center justify-center py-20 border border-black/[0.07] rounded-[28px]">
+              <div className="text-center">
+                <h3 className="text-xl font-bold text-neutral-900">
+                  No properties found
+                </h3>
 
-                {/* IMAGE */}
-                <div className="relative h-[280px] sm:h-[300px] overflow-hidden bg-neutral-100">
-
-                  <Image
-                    src={property.image}
-                    alt={property.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-
-                  {/* IMAGE GRADIENT */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent opacity-80" />
-
-                  {/* TYPE */}
-                  <div className="absolute top-4 left-4">
-                    <span className="rounded-full bg-white/95 backdrop-blur-md px-4 py-2 text-[11px] font-bold tracking-wider text-neutral-900 shadow-sm">
-                      {property.type}
-                    </span>
-                  </div>
-
-                  {/* HEART */}
-                  <button className="absolute top-4 right-4 h-10 w-10 rounded-full border border-white/30 bg-black/20 backdrop-blur-md flex items-center justify-center text-white transition-all duration-200 hover:bg-red-500 hover:border-red-500 hover:scale-105">
-                    <Heart size={18} />
-                  </button>
-
-                  {/* IMAGE NAVIGATION */}
-                  <button className="absolute left-4 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-neutral-800 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-105">
-                    <ChevronLeft size={17} />
-                  </button>
-
-                  <button className="absolute right-4 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-neutral-800 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-105">
-                    <ChevronRight size={17} />
-                  </button>
-
-                  {/* LOCATION ON IMAGE */}
-                  <div className="absolute bottom-4 left-4 flex items-center gap-1.5 text-white text-sm font-medium">
-                    <MapPin size={15} />
-                    {property.location}
-                  </div>
-                </div>
-
-                {/* CARD CONTENT */}
-                <div className="p-5">
-
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h2 className="text-xl font-bold tracking-[-0.3px] text-neutral-950 group-hover:text-red-500 transition-colors">
-                        {property.title}
-                      </h2>
-
-                      <div className="flex items-center gap-1.5 text-neutral-400 mt-2 text-sm">
-                        <MapPin size={14} />
-                        <span>{property.location}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="border-t border-black/[0.06] mt-5 pt-4 flex items-center justify-between">
-
-                    <div>
-                      <p className="text-[10px] uppercase tracking-[1.5px] font-bold text-neutral-400">
-                        Property type
-                      </p>
-
-                      <p className="mt-1 text-sm font-semibold text-neutral-800">
-                        {property.type}
-                      </p>
-                    </div>
-
-                    <button className="h-10 px-5 rounded-full bg-black text-white text-xs font-semibold hover:bg-red-500 transition-all duration-300">
-                     <li>
-                      <Link href = "/roomDescription">
-                      View Property
-</Link>
-                     </li>
-                    </button>
-                  </div>
-
-                  {/* This is the extra section if needed for price and more details    */}
-                  {/* <div>
-                    <h3 className="text-3xl font-bold text-[#ff385c]">
-                      {property.price}
-                    </h3>
-                    <p className="text-gray-500">Per Month</p>
-                  </div> */}
-
-                  {/* <button className="bg-[#ff385c] hover:bg-[#ff2b53] text-white px-6 py-3 rounded-full font-semibold transition">
-                    View
-                  </button> */}
-
-                  {/* 
-                  <div className="border-t mt-6 pt-5">
-                    <div className="grid grid-cols-3 text-center">
-                      <div>
-                        <h4 className="font-bold text-lg">2</h4>
-                        <p className="text-gray-500 text-sm">Beds</p>
-                      </div>
-
-                      <div>
-                        <h4 className="font-bold text-lg">1</h4>
-                        <p className="text-gray-500 text-sm">Bath</p>
-                      </div>
-
-                      <div>
-                        <h4 className="font-bold text-lg">950</h4>
-                        <p className="text-gray-500 text-sm">Sq.ft</p>
-                      </div>
-                    </div>
-                  </div> */}
-                </div>
+                <p className="mt-2 text-sm text-neutral-500">
+                  There are currently no available properties in {place}.
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-7 mt-10">
+
+              {properties.map((property) => (
+                <div
+                  key={property._id}
+                  className="group overflow-hidden rounded-[28px] border border-black/[0.07] bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(0,0,0,0.09)]"
+                >
+
+                  {/* IMAGE */}
+                  <div className="relative h-[280px] sm:h-[300px] overflow-hidden bg-neutral-100">
+
+                    <Image
+                      src={
+                        property.images.length > 0
+                          ? property.images[0]
+                          : "/FeaturedImages/Img1.webp"
+                      }
+                      alt={property.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+
+                    {/* IMAGE GRADIENT */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent opacity-80" />
+
+                    {/* TYPE */}
+                    <div className="absolute top-4 left-4">
+                      <span className="rounded-full bg-white/95 backdrop-blur-md px-4 py-2 text-[11px] font-bold tracking-wider text-neutral-900 shadow-sm">
+                        {property.propertyType}
+                      </span>
+                    </div>
+
+                    {/* HEART */}
+                    <button className="absolute top-4 right-4 h-10 w-10 rounded-full border border-white/30 bg-black/20 backdrop-blur-md flex items-center justify-center text-white transition-all duration-200 hover:bg-red-500 hover:border-red-500 hover:scale-105">
+                      <Heart size={18} />
+                    </button>
+
+                    {/* IMAGE NAVIGATION */}
+                    <button className="absolute left-4 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-neutral-800 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-105">
+                      <ChevronLeft size={17} />
+                    </button>
+
+                    <button className="absolute right-4 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-neutral-800 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-105">
+                      <ChevronRight size={17} />
+                    </button>
+
+                    {/* LOCATION ON IMAGE */}
+                    <div className="absolute bottom-4 left-4 flex items-center gap-1.5 text-white text-sm font-medium">
+                      <MapPin size={15} />
+                      {property.location}
+                    </div>
+                  </div>
+
+                  {/* CARD CONTENT */}
+                  <div className="p-5">
+
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <h2 className="text-xl font-bold tracking-[-0.3px] text-neutral-950 group-hover:text-red-500 transition-colors">
+                          {property.title}
+                        </h2>
+
+                        <div className="flex items-center gap-1.5 text-neutral-400 mt-2 text-sm">
+                          <MapPin size={14} />
+                          <span>{property.location}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-black/[0.06] mt-5 pt-4 flex items-center justify-between">
+
+                      <div>
+                        <p className="text-[10px] uppercase tracking-[1.5px] font-bold text-neutral-400">
+                          Property type
+                        </p>
+
+                        <p className="mt-1 text-sm font-semibold text-neutral-800">
+                          {property.propertyType}
+                        </p>
+                      </div>
+
+                      <Link href={`/property/${property._id}`}>
+                        <button className="h-10 px-5 rounded-full bg-black text-white text-xs font-semibold hover:bg-red-500 transition-all duration-300">
+                          View Property
+                        </button>
+                      </Link>
+                    </div>
+
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* BOTTOM CTA */}
           <div className="mt-16 rounded-[30px] bg-[#f7f7f5] border border-black/[0.06] p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
 
             <div>
               <p className="text-xs font-bold uppercase tracking-[2px] text-red-500">
-                Can't find what you need?
+                Cant find what you need?
               </p>
 
               <h3 className="mt-2 text-2xl sm:text-3xl font-black tracking-[-1px]">
