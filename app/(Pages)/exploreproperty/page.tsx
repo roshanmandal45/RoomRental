@@ -15,6 +15,7 @@ import NavbarForPage from "@/app/components/NavbarForPage";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import RoomDescription from '../roomDescription/[id]/page';
 
 const propertyTypes = [
   "All",
@@ -95,11 +96,11 @@ export default function ExploreProperty() {
 
       <main className="min-h-screen bg-white">
         {/* HERO / SEARCH AREA */}
-        <section className="bg-[#f7f7f5] border-b border-black/[0.05]">
+        <section className="bg-[#f7f7f5]">
           <div className="max-w-[1380px] mx-auto px-4 sm:px-8 md:px-12 py-10 lg:py-14">
 
             <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-black/[0.08] bg-white px-4 py-2 shadow-sm">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm">
                 <span className="h-2 w-2 rounded-full bg-red-500" />
 
                 <span className="text-xs font-bold uppercase tracking-[2px] text-neutral-500">
@@ -379,8 +380,8 @@ export default function ExploreProperty() {
                         </p>
                       </div>
 
-                      <Link href={`/property/${property._id}`}>
-                        <button className="h-10 px-5 rounded-full bg-black text-white text-xs font-semibold hover:bg-red-500 transition-all duration-300">
+                      <Link href={`/roomDescription/${property._id}`}>
+                        <button className=" cursor-pointer h-10 px-5 rounded-full bg-black text-white text-xs font-semibold hover:bg-red-500 transition-all duration-300">
                           View Property
                         </button>
                       </Link>
