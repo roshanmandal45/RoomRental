@@ -18,6 +18,8 @@ import Footer from '@/app/components/Footer'
 import NavbarForPage from '@/app/components/NavbarForPage'
 import { useAuth } from "@/app/context/AuthContext";
 import NoImg from "@/public/CheapestSecImges/Img8(NoImgSelected).webp"
+  import gemai from "@/public/PopularSecImages/gemai.jpeg"
+
 
 interface Property {
   _id: string;
@@ -197,7 +199,7 @@ const toggleFaq = (index: number) => {
       <main className='max-w-345 mx-auto px-4 sm:px-8 md:px-12 py-8 flex flex-col gap-8'>
         <div className='relative w-full h-50 lg:h-137.5 rounded-2xl overflow-hidden'>
           <Image
-            src={property.images?.[0] || NoImg}
+            src={property.images?.[0] || gemai}
             unoptimized
             alt={property.title || 'Room interior preview'}
             fill
