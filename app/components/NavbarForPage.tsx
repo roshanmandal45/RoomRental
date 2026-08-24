@@ -28,8 +28,6 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
-import { signOut } from "firebase/auth";
-import { auth } from "@/app/lib/firebase";
 
 const categories = [
   { src: room, label: "ROOM", link: "/exploreproperty" },
@@ -60,7 +58,12 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
 
   const router = useRouter();
-  const { user } = useAuth();
+
+  // ==========================================
+  // AUTH
+  // ==========================================
+
+  const { user, loading, logout } = useAuth();
 
   const [profileOpen, setProfileOpen] = useState(false);
 
@@ -80,9 +83,14 @@ const Navbar = () => {
   // ==========================================
 
   const handleLogout = async () => {
-    await signOut(auth);
-    setProfileOpen(false);
-    router.push("/login");
+    try {
+      await logout();
+      setProfileOpen(false);
+      setIsOpen(false);
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   // ==========================================
@@ -195,13 +203,13 @@ const Navbar = () => {
           left-0
           right-0
           bg-white
+          border border-black/[0.07]
           rounded-2xl
           shadow-[0_20px_60px_rgba(0,0,0,0.14)]
           overflow-hidden
           z-[100]
         "
       >
-        {/* Loading */}
         {searchLoading ? (
           <div className="p-5">
             <div className="flex items-center gap-3">
@@ -213,7 +221,6 @@ const Navbar = () => {
             </div>
           </div>
         ) : searchResults.length === 0 ? (
-          /* No results */
           <div className="p-6">
             <div className="h-11 w-11 rounded-xl bg-neutral-100 flex items-center justify-center mb-3">
               <CiSearch
@@ -232,7 +239,6 @@ const Navbar = () => {
             </p>
           </div>
         ) : (
-          /* Results */
           <>
             <div className="px-4 pt-4 pb-2">
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-400">
@@ -264,7 +270,6 @@ const Navbar = () => {
                     group
                   "
                 >
-                  {/* Property image */}
                   <div
                     className="
                       h-14
@@ -301,7 +306,6 @@ const Navbar = () => {
                     )}
                   </div>
 
-                  {/* Property information */}
                   <div className="flex-1 min-w-0">
                     <p
                       className="
@@ -346,7 +350,6 @@ const Navbar = () => {
                     )}
                   </div>
 
-                  {/* Price */}
                   <div className="shrink-0 text-right">
                     {typeof property.price === "number" &&
                     property.price > 0 ? (
@@ -370,7 +373,6 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* View all */}
             <Link
               href={`/exploreproperty?search=${encodeURIComponent(
                 search
@@ -408,12 +410,14 @@ const Navbar = () => {
         z-50
         w-full
         text-black
+        bg-white/95
+        backdrop-blur-xl
         transition-all
         duration-300
         ${
           scrolled
-            ? "bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] border-b border-black/[0.05]"
-            : "bg-white/95 backdrop-blur-xl"
+            ? "border-b border-black/20 shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+            : "border-b border-transparent"
         }
       `}
     >
@@ -425,6 +429,7 @@ const Navbar = () => {
         <div className="h-[76px] flex items-center justify-between gap-5">
 
           {/* LOGO */}
+
           <Link
             href="/"
             className="flex items-center tracking-tight shrink-0"
@@ -439,6 +444,7 @@ const Navbar = () => {
           </Link>
 
           {/* DESKTOP SEARCH */}
+
           <div
             ref={searchRef}
             className="hidden md:flex flex-1 max-w-[560px] relative"
@@ -462,7 +468,6 @@ const Navbar = () => {
               "
             >
               <div className="flex items-center gap-3 flex-1 pl-4">
-
                 <div
                   className="
                     h-8
@@ -549,9 +554,11 @@ const Navbar = () => {
           </div>
 
           {/* DESKTOP ACTIONS */}
+
           <div className="hidden lg:flex items-center gap-2.5 shrink-0">
 
             {/* COUNTRY */}
+
             <div className="relative">
               <button
                 onClick={() => setBtnOpen((prev) => !prev)}
@@ -619,6 +626,7 @@ const Navbar = () => {
                   </div>
 
                   {/* Nepal */}
+
                   <button
                     onClick={() => {
                       setSelectedButton("Nepal");
@@ -672,6 +680,7 @@ const Navbar = () => {
                   </button>
 
                   {/* United States */}
+
                   <button
                     onClick={() => {
                       setSelectedButton("United States");
@@ -728,6 +737,7 @@ const Navbar = () => {
             </div>
 
             {/* ADD PROPERTY */}
+
             <button
               onClick={() => router.push("/addProperty")}
               className="
@@ -755,8 +765,11 @@ const Navbar = () => {
             </button>
 
             {/* PROFILE */}
+
             <div className="relative ml-1">
-              {user ? (
+              {loading ? (
+                <div className="h-11 w-11 rounded-xl bg-neutral-100 animate-pulse" />
+              ) : user ? (
                 <>
                   <button
                     onClick={() =>
@@ -795,7 +808,7 @@ const Navbar = () => {
                     )}
                   </button>
 
-                  {profileOpen && user && (
+                  {profileOpen && (
                     <div
                       className="
                         absolute
@@ -892,6 +905,7 @@ const Navbar = () => {
           </div>
 
           {/* MOBILE MENU BUTTON */}
+
           <button
             onClick={() => setIsOpen((prev) => !prev)}
             className="
@@ -1004,7 +1018,6 @@ const Navbar = () => {
               gap-7
               items-center
               overflow-x-auto
-            
               pt-3
               [&::-webkit-scrollbar]:hidden
               [-ms-overflow-style:none]
@@ -1129,7 +1142,7 @@ const Navbar = () => {
             flex-col
             z-50
             gap-3
-          
+            border border-black/[0.06]
             rounded-3xl
             bg-white
             shadow-[0_25px_80px_rgba(0,0,0,0.18)]
@@ -1137,6 +1150,7 @@ const Navbar = () => {
           "
         >
           {/* Drawer Header */}
+
           <div className="flex items-center justify-between pb-2 border-b border-black/[0.06]">
             <Link
               href="/"
@@ -1168,6 +1182,7 @@ const Navbar = () => {
           </div>
 
           {/* Add Property */}
+
           <button
             onClick={() => {
               setIsOpen(false);
@@ -1194,8 +1209,11 @@ const Navbar = () => {
           </button>
 
           {/* Profile */}
+
           <div className="relative">
-            {user ? (
+            {loading ? (
+              <div className="w-full h-[66px] rounded-xl bg-neutral-100 animate-pulse" />
+            ) : user ? (
               <div>
                 <button
                   onClick={() =>
@@ -1294,6 +1312,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Links */}
+
           <div className="rounded-xl border border-black/[0.06] overflow-hidden">
             <Link
               href="/aboutus"
@@ -1312,14 +1331,16 @@ const Navbar = () => {
             </Link>
 
             <Link
-              href="#"
+              href="/blogs"
+              onClick={() => setIsOpen(false)}
               className="block px-4 py-3.5 text-sm font-medium hover:bg-neutral-50 border-b border-black/[0.05]"
             >
               Blog
             </Link>
 
             <Link
-              href="#"
+              href="/help"
+              onClick={() => setIsOpen(false)}
               className="block px-4 py-3.5 text-sm font-medium hover:bg-neutral-50"
             >
               Help & Support
@@ -1327,6 +1348,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Country */}
+
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-400 px-1 mb-2">
               Location
