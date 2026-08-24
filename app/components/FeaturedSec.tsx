@@ -6,6 +6,8 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation' 
 import { useEffect, useState } from 'react'
   import DefaultImg from "@/public/CheapestSecImges/Img8(NoImgSelected).webp"
+    import gemai from "@/public/PopularSecImages/gemai.jpeg"
+
 
   interface Property {
     _id: string;
@@ -74,7 +76,7 @@ const FeaturedSec = () => {
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-8'>
               {properties.map((property) => {
                   const hasImage = Array.isArray(property?.images) && property.images.length > 0 && property.images[0];
-          const imageSrc = hasImage ? property.images[0] : DefaultImg;
+          const imageSrc = hasImage ? property.images[0] : gemai;
           return (
                 <div key={property._id} className='flex flex-col gap-3 group cursor-pointer'>
                   
