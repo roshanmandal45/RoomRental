@@ -28,8 +28,6 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
-import { signOut } from "firebase/auth";
-import { auth } from "@/app/lib/firebase";
 
 const categories = [
   { src: room, label: "ROOM", link: "/exploreproperty" },
@@ -60,7 +58,12 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
 
   const router = useRouter();
-  const { user } = useAuth();
+
+  // ==========================================
+  // AUTH
+  // ==========================================
+
+  const { user, loading, logout } = useAuth();
 
   const [profileOpen, setProfileOpen] = useState(false);
 
@@ -80,9 +83,14 @@ const Navbar = () => {
   // ==========================================
 
   const handleLogout = async () => {
-    await signOut(auth);
-    setProfileOpen(false);
-    router.push("/login");
+    try {
+      await logout();
+      setProfileOpen(false);
+      setIsOpen(false);
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   // ==========================================
@@ -757,7 +765,9 @@ const Navbar = () => {
 
             {/* PROFILE */}
             <div className="relative ml-1">
-              {user ? (
+              {loading ? (
+                <div className="h-11 w-11 rounded-xl bg-neutral-100 animate-pulse" />
+              ) : user ? (
                 <>
                   <button
                     onClick={() =>
@@ -796,7 +806,7 @@ const Navbar = () => {
                     )}
                   </button>
 
-                  {profileOpen && user && (
+                  {profileOpen && (
                     <div
                       className="
                         absolute
@@ -1196,7 +1206,9 @@ const Navbar = () => {
 
           {/* Profile */}
           <div className="relative">
-            {user ? (
+            {loading ? (
+              <div className="w-full h-[66px] rounded-xl bg-neutral-100 animate-pulse" />
+            ) : user ? (
               <div>
                 <button
                   onClick={() =>
