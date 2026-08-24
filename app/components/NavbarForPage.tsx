@@ -195,7 +195,6 @@ const Navbar = () => {
           left-0
           right-0
           bg-white
-          border border-black/[0.07]
           rounded-2xl
           shadow-[0_20px_60px_rgba(0,0,0,0.14)]
           overflow-hidden
@@ -1005,7 +1004,7 @@ const Navbar = () => {
               gap-7
               items-center
               overflow-x-auto
-              border-t border-black/[0.04]
+            
               pt-3
               [&::-webkit-scrollbar]:hidden
               [-ms-overflow-style:none]
@@ -1130,7 +1129,7 @@ const Navbar = () => {
             flex-col
             z-50
             gap-3
-            border border-black/[0.06]
+          
             rounded-3xl
             bg-white
             shadow-[0_25px_80px_rgba(0,0,0,0.18)]

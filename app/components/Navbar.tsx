@@ -413,7 +413,7 @@ const Navbar = () => {
         duration-300
         ${
           scrolled
-            ? "bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] border-b border-black/[0.05]"
+            ? "bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] "
             : "bg-white/95 backdrop-blur-xl"
         }
       `}
@@ -422,7 +422,7 @@ const Navbar = () => {
       {/* TOP NAVBAR */}
       {/* ================================================= */}
 
-      <div className="max-w-[1450px] mx-auto px-4 sm:px-8 lg:px-10">
+      <div className="max-w-[1450px] mx-auto px-4 sm:px-8 lg:px-10 ">
         <div className="h-[76px] flex items-center justify-between gap-5">
 
           {/* LOGO */}

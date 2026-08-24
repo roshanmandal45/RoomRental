@@ -118,6 +118,7 @@ export async function GET(req: Request) {
       })
         .sort({ createdAt: -1 })
         .limit(8);
+        
 
       return Response.json(properties, { status: 200 });
     }
