@@ -1,16 +1,14 @@
+import { NextResponse } from "next/server";
 import dbConnect from "@/app/lib/dbConnect";
 import User from "@/app/models/User";
-import { adminAuth } from "@/app/lib/firebaseAdmin";
+import { getFirebaseAdminAuth } from "@/app/lib/firebaseAdmin";
 
-
-// POST /api/users
 export async function POST(req: Request) {
   try {
-    // 1. Get Firebase ID token from request
     const authHeader = req.headers.get("Authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return Response.json(
+      return NextResponse.json(
         { message: "Authentication token missing" },
         { status: 401 }
       );
@@ -18,66 +16,82 @@ export async function POST(req: Request) {
 
     const token = authHeader.split("Bearer ")[1];
 
-    // 2. Verify Firebase token
+    // Verify token with Firebase Admin
+    const adminAuth = getFirebaseAdminAuth();
     const decodedToken = await adminAuth.verifyIdToken(token);
-
     const firebaseUid = decodedToken.uid;
     const email = decodedToken.email;
 
     if (!email) {
-      return Response.json(
-        { message: "Firebase account has no email" },
+      return NextResponse.json(
+        { message: "Firebase account has no associated email" },
         { status: 400 }
       );
     }
 
-    // 3. Get user information sent from frontend
-    const body = await req.json();
+    const body = await req.json().catch(() => ({}));
+    
+    // Fallback safely to decoded token values if body fields are empty/null
+    const name = body.name?.trim() || decodedToken.name || "User";
+    const profileImage = body.profileImage || decodedToken.picture || "";
 
-    const name = body.name;
-    const profileImage = body.profileImage;
-
-    // 4. Connect to MongoDB
     await dbConnect();
 
-    // 5. Check whether this Firebase user already exists
-    let user = await User.findOne({ firebaseUid });
+    // Query by firebaseUid OR email to catch existing accounts safely
+    let user = await User.findOne({
+      $or: [{ firebaseUid }, { email }],
+    });
 
-    // If user already exists, don't create another one
     if (user) {
-      return Response.json(
+      // Link firebaseUid if missing (e.g., registered with credentials before)
+      if (!user.firebaseUid) {
+        user.firebaseUid = firebaseUid;
+        await user.save();
+      }
+
+      return NextResponse.json(
         {
           message: "User already exists",
           user,
+          alreadyExists: true,
         },
         { status: 200 }
       );
     }
 
-    // 6. Create MongoDB user
+    // Create new MongoDB user
     user = await User.create({
       firebaseUid,
-      name: name || "User",
+      name,
       email,
-      profileImage: profileImage || "",
+      profileImage,
       role: "renter",
     });
 
-    // 7. Send MongoDB user back
-    return Response.json(
+    return NextResponse.json(
       {
         message: "User synced successfully",
         user,
+        alreadyExists: false,
       },
       { status: 201 }
     );
+  } catch (error: any) {
+    console.error("SERVER API ERROR (/api/users):", error);
 
-  } catch (error) {
-    console.error("User sync error:", error);
+    // MongoDB duplicate key error (E11000)
+    if (error.code === 11000) {
+      return NextResponse.json(
+        { message: "Account with this email already exists.", alreadyExists: true },
+        { status: 409 }
+      );
+    }
 
-    return Response.json(
-      {
-        message: "Failed to sync user",
+    return NextResponse.json(
+      { 
+        message: error.message || "Internal server error",
+        errorDetails: error.toString(),
+        stack: error.stack
       },
       { status: 500 }
     );

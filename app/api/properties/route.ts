@@ -278,7 +278,7 @@ export async function POST(req: Request) {
     // Import Firebase Admin only when POST is called
     // --------------------------------------------------
 
-    const { adminAuth } = await import("@/app/lib/firebaseAdmin");
+    const { getFirebaseAdminAuth } = await import("@/app/lib/firebaseAdmin");
 
 
     // --------------------------------------------------
@@ -303,6 +303,7 @@ export async function POST(req: Request) {
     // 2. Verify Firebase token
     // --------------------------------------------------
 
+    const adminAuth = getFirebaseAdminAuth();
     const decodedToken = await adminAuth.verifyIdToken(token);
 
     const firebaseUid = decodedToken.uid;
@@ -446,7 +447,7 @@ export async function POST(req: Request) {
       { status: 201 }
     );
 
-  } catch (error) {
+  } catch (error: any) {
 
     console.error(
       "Property creation error:",
@@ -456,6 +457,8 @@ export async function POST(req: Request) {
     return Response.json(
       {
         message: "Failed to create property",
+        errorDetails: error?.toString(),
+        stack: error?.stack,
       },
       { status: 500 }
     );
