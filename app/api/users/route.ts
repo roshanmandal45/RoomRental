@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/app/lib/dbConnect";
 import User from "@/app/models/User";
-import { adminAuth } from "@/app/lib/firebaseAdmin";
+import { getFirebaseAdminAuth } from "@/app/lib/firebaseAdmin";
 
 export async function POST(req: Request) {
   try {
@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     const token = authHeader.split("Bearer ")[1];
 
     // Verify token with Firebase Admin
+    const adminAuth = getFirebaseAdminAuth();
     const decodedToken = await adminAuth.verifyIdToken(token);
     const firebaseUid = decodedToken.uid;
     const email = decodedToken.email;
@@ -87,7 +88,11 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(
-      { message: error.message || "Internal server error" },
+      { 
+        message: error.message || "Internal server error",
+        errorDetails: error.toString(),
+        stack: error.stack
+      },
       { status: 500 }
     );
   }
