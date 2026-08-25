@@ -3,7 +3,6 @@
   import Image from 'next/image'
   import { useRouter } from 'next/navigation' 
   import React, { useEffect, useState } from 'react'
-  import DefaultImg from "@/public/CheapestSecImges/Img8(NoImgSelected).webp"
   import gemai from "@/public/PopularSecImages/gemai.jpeg"
 
   import { CiHeart, CiLocationOn } from 'react-icons/ci'
