@@ -55,7 +55,7 @@ const Register = () => {
       // 3. Get Firebase ID token
       const token = await result.user.getIdToken();
 
-      // 4. Send Firebase user information to our backend
+      // 4. Send Firebase user information to backend
       const response = await fetch("/api/users", {
         method: "POST",
 
@@ -83,8 +83,11 @@ const Register = () => {
       console.log("Firebase user created:", result.user);
       console.log("MongoDB user created:", data.user);
 
-      // 7. Everything succeeded
-      router.replace("/");
+      // 7. Show success message
+      alert("Registration successful! Please login to continue.");
+
+      // 8. Redirect to login page
+      router.replace("/login");
     } catch (err: any) {
       console.error("REGISTER ERROR:", err);
 
@@ -123,7 +126,7 @@ const Register = () => {
       // 3. Get Firebase ID token
       const token = await result.user.getIdToken();
 
-      // 4. Send Google user information to our backend
+      // 4. Send Google user information to backend
       const response = await fetch("/api/users", {
         method: "POST",
 
@@ -151,8 +154,11 @@ const Register = () => {
       console.log("Google/Firebase user:", result.user);
       console.log("MongoDB user:", data.user);
 
-      // 7. Everything succeeded
-      router.replace("/");
+      // 7. Show success message
+      alert("Registration successful! Please login to continue.");
+
+      // 8. Redirect to login page
+      router.replace("/login");
     } catch (err: any) {
       console.error("GOOGLE REGISTER ERROR:", err);
 
