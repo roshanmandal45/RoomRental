@@ -23,161 +23,144 @@ const Register = () => {
 
   const router = useRouter();
 
+  // Helper to safely parse JSON response from backend
+  const parseBackendResponse = async (response: Response) => {
+    const text = await response.text();
+    try {
+      return text ? JSON.parse(text) : {};
+    } catch {
+      throw new Error(`Server returned status ${response.status} (${response.statusText})`);
+    }
+  };
+
   // ==============================
   // Email/Password Registration
   // ==============================
-  const handleRegister = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
-
-    setError("");
-    setLoading(true);
-
-    try {
-      // 1. Create user in Firebase
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      // 2. Add name and profile image to Firebase user
-      const profileImage =
-        "https://ui-avatars.com/api/?name=" +
-        encodeURIComponent(name.trim());
-
-      await updateProfile(result.user, {
-        displayName: name.trim(),
-        photoURL: profileImage,
-      });
-
-      // 3. Get Firebase ID token
-      const token = await result.user.getIdToken();
-
-      // 4. Send Firebase user information to our backend
-      const response = await fetch("/api/users", {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-
-        body: JSON.stringify({
-          name: name.trim(),
-          profileImage,
-        }),
-      });
-
-      // 5. Read backend response
-      const data = await response.json();
-
-      // 6. Check if MongoDB user creation failed
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Failed to create MongoDB user"
-        );
-      }
-
-      console.log("Firebase user created:", result.user);
-      console.log("MongoDB user created:", data.user);
-
-      // 7. Everything succeeded
-      router.replace("/");
-    } catch (err: any) {
-      console.error("REGISTER ERROR:", err);
-
-      if (err?.code === "auth/email-already-in-use") {
-        setError("An account with this email already exists.");
-      } else if (err?.code === "auth/weak-password") {
-        setError("Password should be at least 6 characters.");
-      } else if (err?.code === "auth/invalid-email") {
-        setError("Please enter a valid email address.");
-      } else {
-        setError(err?.message || "Registration failed.");
-      }
-
-      setLoading(false);
-    }
-  };
-
   // ==============================
-  // Google Registration
-  // ==============================
-  const handleGoogleRegister = async () => {
-    setError("");
-    setLoading(true);
+// Email/Password Registration
+// ==============================
+const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    try {
-      // 1. Open Google login
-      const provider = new GoogleAuthProvider();
+  try {
+    // 1. Create user in Firebase
+    const result = await createUserWithEmailAndPassword(
+      auth,
+      email.trim(),
+      password
+    );
 
-      provider.setCustomParameters({
-        prompt: "select_account",
-      });
+    const profileImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(name.trim())}`;
 
-      // 2. Sign in with Google through Firebase
-      const result = await signInWithPopup(auth, provider);
+    await updateProfile(result.user, {
+      displayName: name.trim(),
+      photoURL: profileImage,
+    });
 
-      // 3. Get Firebase ID token
-      const token = await result.user.getIdToken();
+    // 2. Sync with MongoDB
+    const token = await result.user.getIdToken();
+    const response = await fetch("/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name: name.trim(), profileImage }),
+    });
 
-      // 4. Send Google user information to our backend
-      const response = await fetch("/api/users", {
-        method: "POST",
+    const data = await parseBackendResponse(response);
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-
-        body: JSON.stringify({
-          name: result.user.displayName || "User",
-          profileImage: result.user.photoURL || "",
-        }),
-      });
-
-      // 5. Read backend response
-      const data = await response.json();
-
-      // 6. Check MongoDB response
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Failed to create MongoDB user"
-        );
-      }
-
-      console.log("Google/Firebase user:", result.user);
-      console.log("MongoDB user:", data.user);
-
-      // 7. Everything succeeded
-      router.replace("/");
-    } catch (err: any) {
-      console.error("GOOGLE REGISTER ERROR:", err);
-
-      if (err?.code === "auth/popup-blocked") {
-        setError(
-          "Pop-up blocked by browser. Please allow pop-ups for this site."
-        );
-      } else if (err?.code === "auth/popup-closed-by-user") {
-        setError(
-          "Registration popup was closed before completing."
-        );
-      } else {
-        setError(
-          err?.message || "Google registration failed."
-        );
-      }
-
-      setLoading(false);
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to sync user.");
     }
-  };
+
+    // Handle existing user status returned from backend (HTTP 200)
+    if (data.alreadyExists) {
+      setError("An account with this email already exists. Redirecting...");
+      setTimeout(() => router.push("/login"), 2000);
+      return;
+    }
+
+    router.replace("/");
+  } catch (err: any) {
+    console.error("REGISTER ERROR:", err);
+
+    // Firebase Auth throws this before reaching fetch if email exists in Firebase
+    if (err?.code === "auth/email-already-in-use") {
+      setError("An account with this email already exists. Please log in.");
+      // Render state error on-screen instead of an abrupt alert/push
+    } else if (err?.code === "auth/weak-password") {
+      setError("Password should be at least 6 characters.");
+    } else if (err?.code === "auth/invalid-email") {
+      setError("Please enter a valid email address.");
+    } else {
+      setError(err?.message || "Registration failed.");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
+// ==============================
+// Google Registration
+// ==============================
+const handleGoogleRegister = async () => {
+  setError("");
+  setLoading(true);
+
+  try {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account" });
+
+    const result = await signInWithPopup(auth, provider);
+    const token = await result.user.getIdToken();
+
+    const response = await fetch("/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: result.user.displayName || "User",
+        profileImage: result.user.photoURL || "",
+      }),
+    });
+
+    const data = await parseBackendResponse(response);
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to sync database record.");
+    }
+
+    // Check if user was already in MongoDB
+    if (data.alreadyExists) {
+      setError("Account already registered! Redirecting to login...");
+      setTimeout(() => router.push("/login"), 1500);
+      return;
+    }
+
+    router.replace("/");
+  } catch (err: any) {
+    console.error("GOOGLE REGISTER ERROR:", err);
+
+    if (err?.code === "auth/popup-blocked") {
+      setError("Pop-up blocked by browser. Please allow pop-ups for this site.");
+    } else if (err?.code === "auth/popup-closed-by-user") {
+      setError("Registration popup was closed before completing.");
+    } else {
+      setError(err?.message || "Google registration failed.");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="bg-white rounded-xl p-6 shadow-md mx-auto w-full max-w-md">
-
         {/* Title */}
         <div className="text-center text-2xl font-medium">
           <h1>Register</h1>
@@ -191,11 +174,7 @@ const Register = () => {
         )}
 
         {/* Form */}
-        <form
-          className="flex flex-col gap-5 mt-6"
-          onSubmit={handleRegister}
-        >
-
+        <form className="flex flex-col gap-5 mt-6" onSubmit={handleRegister}>
           {/* Name */}
           <div className="relative">
             <label
@@ -204,7 +183,6 @@ const Register = () => {
             >
               Name:
             </label>
-
             <input
               id="name"
               type="text"
@@ -224,7 +202,6 @@ const Register = () => {
             >
               Email:
             </label>
-
             <input
               id="email"
               type="email"
@@ -244,7 +221,6 @@ const Register = () => {
             >
               Password:
             </label>
-
             <input
               id="password"
               type="password"
@@ -264,17 +240,13 @@ const Register = () => {
               disabled={loading}
               className="w-full bg-black text-white py-2 cursor-pointer rounded-lg hover:bg-gray-800 transition disabled:bg-gray-400"
             >
-              {loading
-                ? "Creating account..."
-                : "Register"}
+              {loading ? "Creating account..." : "Register"}
             </button>
           </div>
         </form>
 
         {/* Divider */}
-        <div className="text-center text-gray-500 my-4">
-          or
-        </div>
+        <div className="text-center text-gray-500 my-4">or</div>
 
         {/* Google Register */}
         <div>
@@ -289,21 +261,13 @@ const Register = () => {
               className="w-5 h-5 pointer-events-none"
               src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
             />
-
-            <span>
-              {loading
-                ? "Connecting..."
-                : "Continue with Google"}
-            </span>
+            <span>{loading ? "Connecting..." : "Continue with Google"}</span>
           </button>
         </div>
 
         {/* Login Link */}
         <div className="flex items-center justify-center gap-1 mt-4 text-sm">
-          <span>
-            Already have an account?
-          </span>
-
+          <span>Already have an account?</span>
           <Link
             href="/login"
             className="text-blue-700 hover:underline font-medium"
@@ -311,7 +275,6 @@ const Register = () => {
             Login
           </Link>
         </div>
-
       </div>
     </div>
   );
