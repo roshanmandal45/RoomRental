@@ -5,7 +5,6 @@ import { adminAuth } from "@/app/lib/firebaseAdmin";
 
 export async function POST(req: Request) {
   try {
-    // 1. Get Firebase ID token from header
     const authHeader = req.headers.get("Authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -17,33 +16,33 @@ export async function POST(req: Request) {
 
     const token = authHeader.split("Bearer ")[1];
 
-    // 2. Verify Firebase token using Admin SDK
+    // Verify token with Firebase Admin
     const decodedToken = await adminAuth.verifyIdToken(token);
     const firebaseUid = decodedToken.uid;
     const email = decodedToken.email;
 
     if (!email) {
       return NextResponse.json(
-        { message: "Firebase account has no email address" },
+        { message: "Firebase account has no associated email" },
         { status: 400 }
       );
     }
 
-    // 3. Parse request body safely
     const body = await req.json().catch(() => ({}));
-    const name = body.name?.trim();
-    const profileImage = body.profileImage;
+    
+    // Fallback safely to decoded token values if body fields are empty/null
+    const name = body.name?.trim() || decodedToken.name || "User";
+    const profileImage = body.profileImage || decodedToken.picture || "";
 
-    // 4. Connect to MongoDB
     await dbConnect();
 
-    // 5. Check if user exists by firebaseUid OR by email
+    // Query by firebaseUid OR email to catch existing accounts safely
     let user = await User.findOne({
       $or: [{ firebaseUid }, { email }],
     });
 
     if (user) {
-      // If user exists by email but firebaseUid isn't linked yet, update it
+      // Link firebaseUid if missing (e.g., registered with credentials before)
       if (!user.firebaseUid) {
         user.firebaseUid = firebaseUid;
         await user.save();
@@ -59,45 +58,36 @@ export async function POST(req: Request) {
       );
     }
 
-    // 6. Create new MongoDB user
+    // Create new MongoDB user
     user = await User.create({
       firebaseUid,
-      name: name || decodedToken.name || "User",
+      name,
       email,
-      profileImage: profileImage || decodedToken.picture || "",
+      profileImage,
       role: "renter",
     });
 
-    // 7. Return created user
     return NextResponse.json(
       {
-        message: "User created successfully",
+        message: "User synced successfully",
         user,
         alreadyExists: false,
       },
       { status: 201 }
     );
   } catch (error: any) {
-    console.error("USER ROUTE API ERROR:", error);
+    console.error("SERVER API ERROR (/api/users):", error);
 
-    // Handle MongoDB duplicate key error specifically (E11000)
+    // MongoDB duplicate key error (E11000)
     if (error.code === 11000) {
       return NextResponse.json(
-        { message: "An account with this email already exists." },
+        { message: "Account with this email already exists.", alreadyExists: true },
         { status: 409 }
       );
     }
 
-    // Handle invalid Firebase token
-    if (error.code?.startsWith("auth/")) {
-      return NextResponse.json(
-        { message: "Invalid or expired authentication token." },
-        { status: 401 }
-      );
-    }
-
     return NextResponse.json(
-      { message: error?.message || "Internal server error" },
+      { message: error.message || "Internal server error" },
       { status: 500 }
     );
   }
