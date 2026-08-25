@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "@/public/heroSecImages/logo.svg";
 import room from "@/public/CatImages/roomicon.webp";
 import BK from "@/public/CatImages/BK.webp";
 import BHK from "@/public/CatImages/BHK.webp";
@@ -181,9 +180,7 @@ const Navbar = () => {
 
     setShowResults(false);
 
-    router.push(
-      `/exploreproperty?search=${encodeURIComponent(value)}`
-    );
+    router.push(`/exploreproperty?search=${encodeURIComponent(value)}`);
   };
 
   // ==========================================
@@ -223,10 +220,7 @@ const Navbar = () => {
         ) : searchResults.length === 0 ? (
           <div className="p-6">
             <div className="h-11 w-11 rounded-xl bg-neutral-100 flex items-center justify-center mb-3">
-              <CiSearch
-                size={22}
-                className="text-neutral-400"
-              />
+              <CiSearch size={22} className="text-neutral-400" />
             </div>
 
             <p className="font-semibold text-neutral-900">
@@ -280,8 +274,7 @@ const Navbar = () => {
                       bg-neutral-100
                     "
                   >
-                    {property.images &&
-                    property.images.length > 0 ? (
+                    {property.images && property.images.length > 0 ? (
                       <Image
                         src={property.images[0]}
                         alt={property.title}
@@ -307,14 +300,7 @@ const Navbar = () => {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p
-                      className="
-                        text-sm
-                        font-semibold
-                        text-neutral-900
-                        truncate
-                      "
-                    >
+                    <p className="text-sm font-semibold text-neutral-900 truncate">
                       {property.title}
                     </p>
 
@@ -355,8 +341,7 @@ const Navbar = () => {
                     property.price > 0 ? (
                       <>
                         <p className="text-sm font-bold text-neutral-900">
-                          Rs.{" "}
-                          {property.price.toLocaleString()}
+                          Rs. {property.price.toLocaleString()}
                         </p>
 
                         <p className="text-[10px] text-neutral-400 mt-0.5">
@@ -374,9 +359,7 @@ const Navbar = () => {
             </div>
 
             <Link
-              href={`/exploreproperty?search=${encodeURIComponent(
-                search
-              )}`}
+              href={`/exploreproperty?search=${encodeURIComponent(search)}`}
               onClick={() => {
                 setShowResults(false);
               }}
@@ -428,7 +411,7 @@ const Navbar = () => {
       <div className="max-w-[1450px] mx-auto px-4 sm:px-8 lg:px-10">
         <div className="h-[76px] flex items-center justify-between gap-5">
 
-          {/* LOGO */}
+          {/* ROOMIFY TEXT LOGO */}
 
           <Link
             href="/"
@@ -581,9 +564,7 @@ const Navbar = () => {
                 "
               >
                 <span className="text-base">
-                  {selectedButton === "Nepal"
-                    ? "🇳🇵"
-                    : "🇺🇸"}
+                  {selectedButton === "Nepal" ? "🇳🇵" : "🇺🇸"}
                 </span>
 
                 <span>
@@ -624,8 +605,6 @@ const Navbar = () => {
                       Choose your country
                     </p>
                   </div>
-
-                  {/* Nepal */}
 
                   <button
                     onClick={() => {
@@ -678,8 +657,6 @@ const Navbar = () => {
                       />
                     )}
                   </button>
-
-                  {/* United States */}
 
                   <button
                     onClick={() => {
@@ -772,9 +749,7 @@ const Navbar = () => {
               ) : user ? (
                 <>
                   <button
-                    onClick={() =>
-                      setProfileOpen(!profileOpen)
-                    }
+                    onClick={() => setProfileOpen(!profileOpen)}
                     className="
                       h-11
                       w-11
@@ -801,9 +776,7 @@ const Navbar = () => {
                       />
                     ) : (
                       <span className="bg-black text-white flex items-center justify-center h-full w-full font-bold">
-                        {user.email
-                          ?.charAt(0)
-                          .toUpperCase() || "U"}
+                        {user.email?.charAt(0).toUpperCase() || "U"}
                       </span>
                     )}
                   </button>
@@ -834,9 +807,7 @@ const Navbar = () => {
                           />
                         ) : (
                           <div className="h-[46px] w-[46px] rounded-xl bg-black text-white flex items-center justify-center font-bold">
-                            {user.email
-                              ?.charAt(0)
-                              .toUpperCase() || "U"}
+                            {user.email?.charAt(0).toUpperCase() || "U"}
                           </div>
                         )}
 
@@ -933,10 +904,7 @@ const Navbar = () => {
         {/* MOBILE SEARCH */}
         {/* ================================================= */}
 
-        <div
-          ref={searchRef}
-          className="md:hidden pb-4 relative"
-        >
+        <div ref={searchRef} className="md:hidden pb-4 relative">
           <div
             className="
               h-[48px]
@@ -1011,7 +979,9 @@ const Navbar = () => {
         {/* CATEGORY NAVIGATION */}
         {/* ================================================= */}
 
-        <div className="pb-3">
+        {/* Hidden on mobile, visible on large screens */}
+
+        <div className="hidden lg:block pb-3">
           <div
             className="
               flex
@@ -1155,13 +1125,15 @@ const Navbar = () => {
             <Link
               href="/"
               onClick={() => setIsOpen(false)}
+              className="flex items-center tracking-tight shrink-0"
             >
-              <Image
-                src={Logo}
-                alt="logo"
-                width={120}
-                height={34}
-              />
+              <span className="text-2xl font-black text-black">
+                ROOM
+              </span>
+
+              <span className="text-2xl font-black text-red-500">
+                IFY
+              </span>
             </Link>
 
             <button
@@ -1216,9 +1188,7 @@ const Navbar = () => {
             ) : user ? (
               <div>
                 <button
-                  onClick={() =>
-                    setProfileOpen(!profileOpen)
-                  }
+                  onClick={() => setProfileOpen(!profileOpen)}
                   className="
                     w-full
                     flex
@@ -1241,8 +1211,7 @@ const Navbar = () => {
                     />
                   ) : (
                     <span className="bg-black text-white flex items-center justify-center h-10 w-10 rounded-xl font-bold text-sm">
-                      {user.email?.charAt(0).toUpperCase() ||
-                        "U"}
+                      {user.email?.charAt(0).toUpperCase() || "U"}
                     </span>
                   )}
 
